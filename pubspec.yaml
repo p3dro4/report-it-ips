@@ -1,4 +1,4 @@
-name: projeto_cm
+name: report_it_ips
 description: A new Flutter project.
 publish_to: 'none'
 version: 0.1.0
@@ -9,6 +9,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_auth: ^4.6.0
+  firebase_core: ^2.12.0
+  firebase_database: ^10.2.0
+  permission_handler: ^10.2.0
+  google_sign_in: ^5.0.3
+  provider: ^5.0.0
+  google_maps_flutter: ^2.2.6
+  flutter_native_splash: ^2.3.1
+  flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
   flutter_test:
@@ -17,3 +26,18 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: "assets/images/icon.png"
+  min_sdk_android: 21
+
+# Recreate splash screen with:
+# flutter clean && flutter pub get && flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets\images\splash.png
+  android_12:
+    image: assets\images\android12_splash.png
