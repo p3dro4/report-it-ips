@@ -1,0 +1,18 @@
+{
+    "login":"Iniciar Sessão",
+    "sign_in":"Iniciar Sessão",
+    "email":"Email",
+    "password":"Palavra-passe",
+    "forgot_password":"Esqueceu-se da palavra-passe?",
+    "login_success":"Iniciou sessão com sucesso",
+    "user_not_found":"Nenhum utilizador encontrado com o e-mail indicado.",
+    "wrong_password":"A palavra-passe introduzia está incorreta.",
+    "email_required":"O campo email é obrigatório.",
+    "password_required":"O campo palavra-passe é obrigatório.",
+    "email_invalid":"O email introduzido não é válido.",
+    "correct_errors":"Por favor corrija os erros apresentados antes de avançar.",
+    "please_sign_in":"Por favor inicie sessão para continuar.",
+    "or_sign_in_with":"Ou inicie sessão com",
+    "sign_up":"Registe-se",
+    "dont_have_an_account":"Não tem uma conta?"
+}

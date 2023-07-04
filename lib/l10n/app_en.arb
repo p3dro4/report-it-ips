@@ -1,0 +1,66 @@
+{
+    "login":"Login",
+    "@login":{
+        "description":"User login."
+    },
+    "email":"Email",
+    "@email":{
+        "description":"User email."
+    },
+    "password":"Password",
+    "@password":{
+        "description":"User password."
+    },
+    "email_required":"Please provide an email.",
+    "@email":{
+        "description":"Email validation."
+    },
+    "email_invalid":"Please provide a valid email.",
+    "@email_invalid":{
+        "description":"Email validation."
+    },
+    "password_required":"Please provide a password.",
+    "@password":{
+        "description":"Password validation."
+    },
+    "forgot_password":"Forgot password?",
+    "@forgot_password":{
+        "description":"Forgot password link."
+    },
+    "login_success":"Login successful.",
+    "@login_success":{
+        "description":"Login success message."
+    },
+    "user_not_found":"User with the provided email not found.",
+    "@user_not_found":{
+        "description":"User not found message."
+    },
+    "wrong_password":"Wrong password.",
+    "@wrong_password":{
+        "description":"Wrong password message."
+    },
+    "correct_errors":"Please correct the errors before proceding.",
+    "@correct_errors":{
+        "description":"Correct errors message."
+    },
+    "please_sign_in":"Please sign in to continue.",
+    "@please_sign_in":{
+        "description":"Please sign in message."
+    },
+    "sign_in": "Sign in",
+    "@sign_in": {
+        "description": "Sign in button."
+    },
+    "or_sign_in_with": "Or sign in with",
+    "@or_sign_in_with": {
+        "description": "Or sign in with text."
+    },
+    "dont_have_an_account": "Don't have an account?",
+    "@dont_have_an_account": {
+        "description": "Don't have an account text."
+    },
+    "sign_up": "Sign up",
+    "@sign_up": {
+        "description": "Sign up button."
+    }
+}
