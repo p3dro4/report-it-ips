@@ -73,7 +73,7 @@ class _MainAppState extends State<MainApp> {
         useMaterial3: true,
       ),
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        L.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,

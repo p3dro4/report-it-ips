@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:report_it_ips/src/features/authentication/authentication.dart';
-import '../widgets/widgets.dart';
+import 'package:report_it_ips/src/features/authentication/login/widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -32,24 +31,25 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       showSnackbar(
           context: context,
-          message: AppLocalizations.of(context)!.login_success,
+          message: L.of(context)!.login_success,
           backgroundColor: Colors.green);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         showSnackbar(
             context: context,
-            message: AppLocalizations.of(context)!.user_not_found,
+            message: L.of(context)!.user_not_found,
             backgroundColor: Theme.of(context).colorScheme.error);
       } else if (e.code == 'wrong-password') {
         showSnackbar(
             context: context,
-            message: AppLocalizations.of(context)!.wrong_password,
+            message: L.of(context)!.wrong_password,
             backgroundColor: Theme.of(context).colorScheme.error);
       }
     }
   }
 
   void _onSubmit() async {
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(() {
       _submitting = true;
     });
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
       });
       showSnackbar(
         context: context,
-        message: AppLocalizations.of(context)!.correct_errors,
+        message: L.of(context)!.correct_errors,
         backgroundColor: Theme.of(context).colorScheme.error,
       );
       return;
@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      AppLocalizations.of(context)!.sign_in,
+                                      L.of(context)!.sign_in,
                                       style: Theme.of(context)
                                           .textTheme
                                           .displayLarge,
@@ -119,12 +119,12 @@ class _LoginPageState extends State<LoginPage> {
                                 Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
-                                      AppLocalizations.of(context)!
-                                          .please_sign_in,
+                                      L.of(context)!.please_sign_in,
                                       style: Theme.of(context)
                                           .textTheme
                                           .displaySmall,
                                     )),
+                                // * This SizedBox is used to push the form up when the keyboard is open
                                 SizedBox(
                                     height: MediaQuery.of(context)
                                                 .viewInsets
@@ -143,8 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                                           decoration: InputCustomDecorations
                                               .textFieldInput(
                                                   Icons.email_outlined,
-                                                  AppLocalizations.of(context)!
-                                                      .email,
+                                                  L.of(context)!.email,
                                                   Theme.of(context)
                                                       .colorScheme
                                                       .primary,
@@ -158,15 +157,15 @@ class _LoginPageState extends State<LoginPage> {
                                           textInputAction: TextInputAction.next,
                                           validator: (value) {
                                             if (value?.isEmpty ?? true) {
-                                              return AppLocalizations.of(
-                                                      context)!
+                                              return L
+                                                  .of(context)!
                                                   .email_required;
                                             }
                                             if (!RegExp(
                                                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                                 .hasMatch(value!)) {
-                                              return AppLocalizations.of(
-                                                      context)!
+                                              return L
+                                                  .of(context)!
                                                   .email_invalid;
                                             }
                                             return null;
@@ -179,8 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                                           decoration: InputCustomDecorations
                                               .textFieldInput(
                                                   Icons.lock_outline_rounded,
-                                                  AppLocalizations.of(context)!
-                                                      .password,
+                                                  L.of(context)!.password,
                                                   Theme.of(context)
                                                       .colorScheme
                                                       .primary,
@@ -203,14 +201,15 @@ class _LoginPageState extends State<LoginPage> {
                                           obscureText: _obscureText,
                                           validator: (value) {
                                             if (value?.isEmpty ?? true) {
-                                              return AppLocalizations.of(
-                                                      context)!
+                                              return L
+                                                  .of(context)!
                                                   .password_required;
                                             }
                                             return null;
                                           },
                                           onSaved: (value) =>
                                               _fieldPassword = value,
+                                          onFieldSubmitted: (_) => _onSubmit(),
                                         ),
                                         const SizedBox(height: 10),
                                         Align(
@@ -223,8 +222,8 @@ class _LoginPageState extends State<LoginPage> {
                                                           EdgeInsets.zero),
                                                 ),
                                                 child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
+                                                    L
+                                                        .of(context)!
                                                         .forgot_password,
                                                     style: TextStyle(
                                                         color: Theme.of(context)
@@ -240,12 +239,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 horizontal: 40),
                                             child: Center(
                                                 child: ElevatedButton(
-                                              onPressed: () => {
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus(),
-                                                _onSubmit()
-                                              },
+                                              onPressed: _onSubmit,
                                               style: ButtonStyle(
                                                 elevation:
                                                     MaterialStateProperty.all(
@@ -277,9 +271,7 @@ class _LoginPageState extends State<LoginPage> {
                                                             .colorScheme
                                                             .primary),
                                               ),
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .login,
+                                              child: Text(L.of(context)!.login,
                                                   style: TextStyle(
                                                       fontSize: 16,
                                                       fontFamily: "Roboto",
@@ -291,6 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ))),
                                       ],
                                     )),
+                                // * This SizedBox is used to push the form up when the keyboard is open
                                 SizedBox(
                                     height: MediaQuery.of(context)
                                                 .viewInsets
@@ -301,6 +294,7 @@ class _LoginPageState extends State<LoginPage> {
                                             0.1),
                               ],
                             )),
+                        // * This SizedBox is used to push the form up when the keyboard is open
                         SizedBox(
                             height: MediaQuery.of(context).viewInsets.bottom),
                       ]),
@@ -308,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(AppLocalizations.of(context)!.or_sign_in_with,
+                  Text(L.of(context)!.or_sign_in_with,
                       style: Theme.of(context).textTheme.displaySmall!.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.normal)),
@@ -348,9 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                  AppLocalizations.of(context)!
-                                      .dont_have_an_account,
+                              Text(L.of(context)!.dont_have_an_account,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
@@ -371,8 +363,7 @@ class _LoginPageState extends State<LoginPage> {
                                   padding: MaterialStatePropertyAll(
                                       EdgeInsets.only(left: 5)),
                                 ),
-                                child: Text(
-                                    AppLocalizations.of(context)!.sign_up,
+                                child: Text(L.of(context)!.sign_up,
                                     style: Theme.of(context)
                                         .textTheme
                                         .displaySmall!
