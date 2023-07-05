@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/autentication/autentication.dart';
+import 'package:report_it_ips/src/features/authentication/authentication.dart';
 import 'package:report_it_ips/src/features/main_feed/main_feed.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'firebase_options.dart';

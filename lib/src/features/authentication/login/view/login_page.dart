@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:report_it_ips/src/features/authentication/authentication.dart';
 import '../widgets/widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -337,8 +338,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.0,
+                  const SizedBox(
+                    height: 15,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
@@ -359,7 +360,13 @@ class _LoginPageState extends State<LoginPage> {
                                               .primary,
                                           fontWeight: FontWeight.w500)),
                               TextButton(
-                                onPressed: () => {},
+                                onPressed: () => {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => const SignUpPage(),
+                                    ),
+                                  ),
+                                },
                                 style: const ButtonStyle(
                                   padding: MaterialStatePropertyAll(
                                       EdgeInsets.only(left: 5)),
