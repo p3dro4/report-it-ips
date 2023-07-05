@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        CustomWidgets.customFormInputField(
+                                        CustomFormInputField(
                                           prefixIcon: Icons.email_outlined,
                                           labelText: L.of(context)!.email,
                                           color: Theme.of(context)
@@ -172,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                                               _fieldEmail = value,
                                         ),
                                         const SizedBox(height: 10),
-                                        CustomWidgets.customFormInputField(
+                                        CustomFormInputField(
                                           prefixIcon:
                                               Icons.lock_outline_rounded,
                                           labelText: L.of(context)!.password,
@@ -229,11 +229,13 @@ class _LoginPageState extends State<LoginPage> {
                                                         fontWeight:
                                                             FontWeight.w700)))),
                                         const SizedBox(height: 15),
-                                        CustomWidgets.customSubmitButton(
-                                          _onSubmit,
-                                          L.of(context)!.sign_in,
-                                          Theme.of(context).colorScheme.primary,
-                                          Theme.of(context)
+                                        CustomSubmitButton(
+                                          callback: _onSubmit,
+                                          text: L.of(context)!.sign_in,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          textColor: Theme.of(context)
                                               .colorScheme
                                               .onPrimary,
                                         ),

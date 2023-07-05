@@ -80,6 +80,7 @@ class _MainAppState extends State<MainApp> {
       ],
       supportedLocales: const [
         Locale('pt', 'PT'),
+        // * Uncomment this line to add support for English
         //Locale('en', 'US'),
       ],
       // remove debug banner

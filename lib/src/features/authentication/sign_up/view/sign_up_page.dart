@@ -147,7 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CustomWidgets.customFormInputField(
+                                      CustomFormInputField(
                                         prefixIcon: Icons.email_outlined,
                                         labelText: L.of(context)!.email,
                                         color: Theme.of(context)
@@ -175,7 +175,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         onSaved: (value) => _fieldEmail = value,
                                       ),
                                       const SizedBox(height: 15),
-                                      CustomWidgets.customFormInputField(
+                                      CustomFormInputField(
                                         prefixIcon: Icons.lock_outline_rounded,
                                         labelText: L.of(context)!.password,
                                         color: Theme.of(context)
@@ -200,7 +200,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                             _fieldPassword = value,
                                       ),
                                       const SizedBox(height: 15),
-                                      CustomWidgets.customFormInputField(
+                                      CustomFormInputField(
                                         prefixIcon: Icons.lock_outline_rounded,
                                         labelText:
                                             L.of(context)!.confirm_password,
@@ -226,11 +226,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                             _fieldConfirmPassword = value,
                                       ),
                                       const SizedBox(height: 50),
-                                      CustomWidgets.customSubmitButton(
-                                        _onSubmit,
-                                        L.of(context)!.sign_up,
-                                        Theme.of(context).colorScheme.primary,
-                                        Theme.of(context).colorScheme.onPrimary,
+                                      CustomSubmitButton(
+                                        callback: _onSubmit,
+                                        text: L.of(context)!.sign_up,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        textColor: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary,
                                       ),
                                     ])),
                             // * This SizedBox is used to push the form up when the keyboard is open
@@ -251,12 +255,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(35),
                       child: Align(
                           alignment: Alignment.topLeft,
-                          child: CustomWidgets.customBackButton(
-                              () => {
+                          child: CustomBackButton(
+                              callback: () => {
                                     Navigator.of(context).pop(),
                                   },
-                              L.of(context)!.back,
-                              Theme.of(context).colorScheme.primary))),
+                              text: L.of(context)!.back,
+                              color: Theme.of(context).colorScheme.primary))),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Align(
