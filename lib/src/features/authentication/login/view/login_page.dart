@@ -139,19 +139,17 @@ class _LoginPageState extends State<LoginPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        TextFormField(
-                                          decoration: InputCustomDecorations
-                                              .textFieldInput(
-                                                  Icons.email_outlined,
-                                                  L.of(context)!.email,
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .error,
-                                                  null,
-                                                  null),
+                                        CustomWidgets.customFormInputField(
+                                          prefixIcon: Icons.email_outlined,
+                                          labelText: L.of(context)!.email,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          errorColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                          suffixIcon: null,
+                                          callbackSuffixIcon: null,
                                           keyboardType:
                                               TextInputType.emailAddress,
                                           textInputAction: TextInputAction.next,
@@ -174,27 +172,24 @@ class _LoginPageState extends State<LoginPage> {
                                               _fieldEmail = value,
                                         ),
                                         const SizedBox(height: 10),
-                                        TextFormField(
-                                          decoration: InputCustomDecorations
-                                              .textFieldInput(
-                                                  Icons.lock_outline_rounded,
-                                                  L.of(context)!.password,
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .primary,
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .error,
-                                                  _obscureText
-                                                      ? Icons
-                                                          .visibility_off_outlined
-                                                      : Icons
-                                                          .visibility_outlined,
-                                                  () {
+                                        CustomWidgets.customFormInputField(
+                                          prefixIcon:
+                                              Icons.lock_outline_rounded,
+                                          labelText: L.of(context)!.password,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
+                                          errorColor: Theme.of(context)
+                                              .colorScheme
+                                              .error,
+                                          suffixIcon: _obscureText
+                                              ? Icons.visibility_off_outlined
+                                              : Icons.visibility_outlined,
+                                          callbackSuffixIcon: () {
                                             setState(() {
                                               _obscureText = !_obscureText;
                                             });
-                                          }),
+                                          },
                                           keyboardType:
                                               TextInputType.visiblePassword,
                                           textInputAction: TextInputAction.done,
@@ -234,53 +229,14 @@ class _LoginPageState extends State<LoginPage> {
                                                         fontWeight:
                                                             FontWeight.w700)))),
                                         const SizedBox(height: 15),
-                                        Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 40),
-                                            child: Center(
-                                                child: ElevatedButton(
-                                              onPressed: _onSubmit,
-                                              style: ButtonStyle(
-                                                elevation:
-                                                    MaterialStateProperty.all(
-                                                        5),
-                                                shadowColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.black),
-                                                padding:
-                                                    MaterialStateProperty.all(
-                                                        const EdgeInsets
-                                                                .symmetric(
-                                                            horizontal: 20)),
-                                                minimumSize:
-                                                    MaterialStateProperty.all(
-                                                        const Size(
-                                                            double.infinity,
-                                                            45)),
-                                                shape:
-                                                    MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            13),
-                                                  ),
-                                                ),
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Theme.of(context)
-                                                            .colorScheme
-                                                            .primary),
-                                              ),
-                                              child: Text(L.of(context)!.login,
-                                                  style: TextStyle(
-                                                      fontSize: 16,
-                                                      fontFamily: "Roboto",
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .onPrimary)),
-                                            ))),
+                                        CustomWidgets.customSubmitButton(
+                                          _onSubmit,
+                                          L.of(context)!.sign_in,
+                                          Theme.of(context).colorScheme.primary,
+                                          Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                        ),
                                       ],
                                     )),
                                 // * This SizedBox is used to push the form up when the keyboard is open

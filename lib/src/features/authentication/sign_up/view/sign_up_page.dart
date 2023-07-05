@@ -147,19 +147,15 @@ class _SignUpPageState extends State<SignUpPage> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      TextFormField(
-                                        decoration: InputCustomDecorations
-                                            .textFieldInput(
-                                                Icons.email_outlined,
-                                                L.of(context)!.email,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                null,
-                                                null),
+                                      CustomWidgets.customFormInputField(
+                                        prefixIcon: Icons.email_outlined,
+                                        labelText: L.of(context)!.email,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        errorColor:
+                                            Theme.of(context).colorScheme.error,
+                                        suffixIcon: null,
                                         keyboardType:
                                             TextInputType.emailAddress,
                                         textInputAction: TextInputAction.next,
@@ -179,23 +175,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                         onSaved: (value) => _fieldEmail = value,
                                       ),
                                       const SizedBox(height: 15),
-                                      TextFormField(
-                                        decoration: InputCustomDecorations
-                                            .textFieldInput(
-                                                Icons.lock_outline_rounded,
-                                                L.of(context)!.password,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                null,
-                                                null),
+                                      CustomWidgets.customFormInputField(
+                                        prefixIcon: Icons.lock_outline_rounded,
+                                        labelText: L.of(context)!.password,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        errorColor:
+                                            Theme.of(context).colorScheme.error,
+                                        suffixIcon: null,
+                                        obscureText: true,
                                         keyboardType:
                                             TextInputType.visiblePassword,
                                         textInputAction: TextInputAction.next,
-                                        obscureText: true,
                                         validator: (value) {
                                           if (value?.isEmpty ?? true) {
                                             return L
@@ -208,23 +200,20 @@ class _SignUpPageState extends State<SignUpPage> {
                                             _fieldPassword = value,
                                       ),
                                       const SizedBox(height: 15),
-                                      TextFormField(
-                                        decoration: InputCustomDecorations
-                                            .textFieldInput(
-                                                Icons.lock_outline_rounded,
-                                                L.of(context)!.confirm_password,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .primary,
-                                                Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
-                                                null,
-                                                null),
+                                      CustomWidgets.customFormInputField(
+                                        prefixIcon: Icons.lock_outline_rounded,
+                                        labelText:
+                                            L.of(context)!.confirm_password,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                        errorColor:
+                                            Theme.of(context).colorScheme.error,
+                                        suffixIcon: null,
+                                        obscureText: true,
                                         keyboardType:
                                             TextInputType.visiblePassword,
                                         textInputAction: TextInputAction.done,
-                                        obscureText: true,
                                         validator: (value) {
                                           if (value?.isEmpty ?? true) {
                                             return L
@@ -235,53 +224,14 @@ class _SignUpPageState extends State<SignUpPage> {
                                         },
                                         onSaved: (value) =>
                                             _fieldConfirmPassword = value,
-                                        onFieldSubmitted: (value) =>
-                                            _onSubmit(),
                                       ),
                                       const SizedBox(height: 50),
-                                      Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 40),
-                                          child: Center(
-                                              child: ElevatedButton(
-                                            onPressed: _onSubmit,
-                                            style: ButtonStyle(
-                                              elevation:
-                                                  MaterialStateProperty.all(5),
-                                              shadowColor:
-                                                  MaterialStateProperty.all(
-                                                      Colors.black),
-                                              padding:
-                                                  MaterialStateProperty.all(
-                                                      const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 20)),
-                                              minimumSize:
-                                                  MaterialStateProperty.all(
-                                                      const Size(
-                                                          double.infinity, 45)),
-                                              shape: MaterialStateProperty.all(
-                                                RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(13),
-                                                ),
-                                              ),
-                                              backgroundColor:
-                                                  MaterialStateProperty.all(
-                                                      Theme.of(context)
-                                                          .colorScheme
-                                                          .primary),
-                                            ),
-                                            child: Text(
-                                                L.of(context)!.create_account,
-                                                style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontFamily: "Roboto",
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onPrimary)),
-                                          ))),
+                                      CustomWidgets.customSubmitButton(
+                                        _onSubmit,
+                                        L.of(context)!.sign_up,
+                                        Theme.of(context).colorScheme.primary,
+                                        Theme.of(context).colorScheme.onPrimary,
+                                      ),
                                     ])),
                             // * This SizedBox is used to push the form up when the keyboard is open
                             SizedBox(
@@ -301,8 +251,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: const EdgeInsets.all(35),
                       child: Align(
                           alignment: Alignment.topLeft,
-                          child: CustomBackButton(
-                              color: Theme.of(context).colorScheme.primary))),
+                          child: CustomWidgets.customBackButton(
+                              () => {
+                                    Navigator.of(context).pop(),
+                                  },
+                              L.of(context)!.back,
+                              Theme.of(context).colorScheme.primary))),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Align(
@@ -310,7 +264,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(L.of(context)!.dont_have_an_account,
+                              Text(L.of(context)!.already_have_an_account,
                                   style: Theme.of(context)
                                       .textTheme
                                       .displaySmall!
