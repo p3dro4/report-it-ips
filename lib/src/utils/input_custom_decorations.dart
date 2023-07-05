@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class InputCustomDecorations {
-  static InputDecoration autenticationInput(
-      IconData icon,
-      String label,
+  static InputDecoration textFieldInput(
+      IconData prefixIcon,
+      String labelText,
       Color color,
       Color errorColor,
       IconData? suffixIcon,
-      Function? callbackAction) {
+      Function? callback) {
     var decorations = InputDecoration(
         contentPadding: const EdgeInsets.all(15),
         alignLabelWithHint: true,
@@ -16,10 +16,10 @@ class InputCustomDecorations {
             alignment: Alignment.center,
             heightFactor: 1,
             child: Icon(
-              icon,
+              prefixIcon,
               color: color,
             )),
-        labelText: label,
+        labelText: labelText,
         labelStyle: TextStyle(color: color),   
         focusedBorder:
             UnderlineInputBorder(borderSide: BorderSide(color: color, width: 2)),
@@ -39,7 +39,7 @@ class InputCustomDecorations {
               heightFactor: 1,
               child: IconButton(
                 icon: Icon(suffixIcon, color: color),
-                onPressed: () => callbackAction!(),
+                onPressed: () => callback!(),
               )));
     }
     return decorations;

@@ -8,10 +8,11 @@ class ProviderButton extends StatelessWidget {
       required this.height,
       required this.width});
 
-  final Function? onPressed;
-  final String imageLocation;
   final double? height;
+  final String imageLocation;
+  final Function? onPressed;
   final double? width;
+
   void callback() {
     onPressed!();
   }
@@ -24,6 +25,8 @@ class ProviderButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: callback,
         style: ElevatedButton.styleFrom(
+          elevation: 5,
+          shadowColor: Colors.black,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           backgroundColor: Theme.of(context).colorScheme.primary,

@@ -9,8 +9,21 @@ class BackgroundImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(children: []),
-    );
+    return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      if (top)
+        Align(
+            alignment: Alignment.topRight,
+            child: Image.asset(
+              "assets/images/backgrounds/background_top.png",
+              scale: 1.75,
+            )),
+      if (bottom)
+        Align(
+            alignment: Alignment.bottomLeft,
+            child: Image.asset(
+              "assets/images/backgrounds/background_bottom.png",
+              scale: 2,
+            ))
+    ]);
   }
 }
