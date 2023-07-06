@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:report_it_ips/src/features/authentication/authentication.dart';
 import 'package:report_it_ips/src/features/register/register.dart';
 
 class MainFeedPage extends StatefulWidget {
@@ -12,44 +13,6 @@ class MainFeedPage extends StatefulWidget {
 
 class _MainFeedPageState extends State<MainFeedPage> {
   bool processing = false;
-
-  @override
-  void initState() {
-    isRegistered()
-        .then((registered) => {
-              if (!registered)
-                {
-                  Navigator.popUntil(context, (route) => route.isFirst),
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
-                  )
-                }
-            })
-        .then((value) => {
-              setState(() => processing = false)
-            });
-    super.initState();
-  }
-
-  Future<bool> isRegistered() async {
-    setState(() {
-      processing = true;
-    });
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .where("userId", isEqualTo: user.uid)
-          .get();
-      for (final doc in userDoc.docs) {
-        final data = doc.data();
-        return data["profileCompleted"] as bool;
-      }
-    }
-    return false;
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 
-class BackgroundImage extends StatelessWidget {
+class BackgroundImage extends StatefulWidget {
   const BackgroundImage({super.key, required this.top, required this.bottom});
-
+  final bool top;
   final bool bottom;
 
-  final bool top;
+  @override
+  State<BackgroundImage> createState() => _BackgroundImageState();
+}
 
+class _BackgroundImageState extends State<BackgroundImage> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      if (top)
+      if (widget.top)
         Align(
             alignment: Alignment.topRight,
             child: Image.asset(
               "assets/images/backgrounds/background_top.png",
               scale: 1.75,
             )),
-      if (bottom)
+      if (widget.bottom)
         Align(
             alignment: Alignment.bottomLeft,
             child: Image.asset(

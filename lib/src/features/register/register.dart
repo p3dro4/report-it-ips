@@ -1,1 +1,1 @@
-export 'view/register_page.dart';
+export 'account_type/account_type.dart';

@@ -17,6 +17,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? _fieldEmail;
   String? _fieldPassword;
   final _formKey = GlobalKey<FormState>();
+  bool _agreedWithTerms = false;
   bool _omitTopBackground = false;
   bool _submitting = false;
 
@@ -142,139 +143,225 @@ class _SignUpPageState extends State<SignUpPage> {
               bottom: _submitting && !_omitTopBackground),
           _submitting
               ? const Center(child: CircularProgressIndicator())
-              : Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  L.of(context)!.create_account,
-                                  style:
-                                      Theme.of(context).textTheme.displayLarge,
-                                )),
-                            const SizedBox(height: 10),
-                            Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  L.of(context)!.fill_in_your_details,
-                                  style:
-                                      Theme.of(context).textTheme.displaySmall,
-                                )),
-                            // * This SizedBox is used to push the form up when the keyboard is open
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).viewInsets.bottom > 0
-                                        ? 15
-                                        : MediaQuery.of(context).size.height *
-                                            0.08),
-                            Form(
-                                key: _formKey,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CustomFormInputField(
-                                        prefixIcon: Icons.email_outlined,
-                                        labelText: L.of(context)!.email,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        errorColor:
-                                            Theme.of(context).colorScheme.error,
-                                        suffixIcon: null,
-                                        keyboardType:
-                                            TextInputType.emailAddress,
-                                        textInputAction: TextInputAction.next,
-                                        validator: (value) {
-                                          if (value?.isEmpty ?? true) {
-                                            return L
-                                                .of(context)!
-                                                .email_required;
-                                          }
-                                          if (!RegExp(
-                                                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                              .hasMatch(value!)) {
-                                            return L.of(context)!.email_invalid;
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (value) => _fieldEmail = value,
-                                      ),
-                                      const SizedBox(height: 15),
-                                      CustomFormInputField(
-                                        prefixIcon: Icons.lock_outline_rounded,
-                                        labelText: L.of(context)!.password,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        errorColor:
-                                            Theme.of(context).colorScheme.error,
-                                        suffixIcon: null,
-                                        obscureText: true,
-                                        keyboardType:
-                                            TextInputType.visiblePassword,
-                                        textInputAction: TextInputAction.next,
-                                        validator: (value) {
-                                          if (value?.isEmpty ?? true) {
-                                            return L
-                                                .of(context)!
-                                                .password_required;
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (value) =>
-                                            _fieldPassword = value,
-                                      ),
-                                      const SizedBox(height: 15),
-                                      CustomFormInputField(
-                                        prefixIcon: Icons.lock_outline_rounded,
-                                        labelText:
-                                            L.of(context)!.confirm_password,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        errorColor:
-                                            Theme.of(context).colorScheme.error,
-                                        suffixIcon: null,
-                                        obscureText: true,
-                                        keyboardType:
-                                            TextInputType.visiblePassword,
-                                        textInputAction: TextInputAction.done,
-                                        validator: (value) {
-                                          if (value?.isEmpty ?? true) {
-                                            return L
-                                                .of(context)!
-                                                .password_required;
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (value) =>
-                                            _fieldConfirmPassword = value,
-                                      ),
-                                      const SizedBox(height: 50),
-                                      CustomSubmitButton(
-                                        callback: _onSubmit,
-                                        text: L.of(context)!.sign_up,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary,
-                                        textColor: Theme.of(context)
-                                            .colorScheme
-                                            .onPrimary,
-                                      ),
-                                    ])),
-                            // * This SizedBox is used to push the form up when the keyboard is open
-                            SizedBox(
-                                height: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom >
-                                        0
-                                    ? MediaQuery.of(context).viewInsets.bottom
-                                    : MediaQuery.of(context).size.height * 0.1),
-                          ]))
-                ]),
+              : SingleChildScrollView(
+                  physics: MediaQuery.of(context).viewInsets.bottom > 0
+                      ? const AlwaysScrollableScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        //SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                        Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                40,
+                                MediaQuery.of(context).viewInsets.bottom > 0
+                                    ? MediaQuery.of(context).size.height * 0.05
+                                    : MediaQuery.of(context).size.height * 0.17,
+                                40,
+                                10),
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        L.of(context)!.create_account,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayLarge,
+                                      )),
+                                  const SizedBox(height: 10),
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        L.of(context)!.fill_in_your_details,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displaySmall,
+                                      )),
+                                  // * This SizedBox is used to push the form up when the keyboard is open
+                                  SizedBox(
+                                      height: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom >
+                                              0
+                                          ? 15
+                                          : MediaQuery.of(context).size.height *
+                                              0.05),
+                                  Form(
+                                      key: _formKey,
+                                      child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            CustomFormInputField(
+                                              prefixIcon: Icons.email_outlined,
+                                              labelText: L.of(context)!.email,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              errorColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              suffixIcon: null,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              validator: (value) {
+                                                if (value?.isEmpty ?? true) {
+                                                  return L
+                                                      .of(context)!
+                                                      .email_required;
+                                                }
+                                                if (!RegExp(
+                                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                                    .hasMatch(value!)) {
+                                                  return L
+                                                      .of(context)!
+                                                      .email_invalid;
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (value) =>
+                                                  _fieldEmail = value,
+                                            ),
+                                            const SizedBox(height: 15),
+                                            CustomFormInputField(
+                                              prefixIcon:
+                                                  Icons.lock_outline_rounded,
+                                              labelText:
+                                                  L.of(context)!.password,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              errorColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              suffixIcon: null,
+                                              obscureText: true,
+                                              keyboardType:
+                                                  TextInputType.visiblePassword,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              validator: (value) {
+                                                if (value?.isEmpty ?? true) {
+                                                  return L
+                                                      .of(context)!
+                                                      .password_required;
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (value) =>
+                                                  _fieldPassword = value,
+                                            ),
+                                            const SizedBox(height: 15),
+                                            CustomFormInputField(
+                                              prefixIcon:
+                                                  Icons.lock_outline_rounded,
+                                              labelText: L
+                                                  .of(context)!
+                                                  .confirm_password,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              errorColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .error,
+                                              suffixIcon: null,
+                                              obscureText: true,
+                                              keyboardType:
+                                                  TextInputType.visiblePassword,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              validator: (value) {
+                                                if (value?.isEmpty ?? true) {
+                                                  return L
+                                                      .of(context)!
+                                                      .password_required;
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (value) =>
+                                                  _fieldConfirmPassword = value,
+                                              onFieldSubmitted: (value) => {
+                                                if (_agreedWithTerms)
+                                                  _onSubmit()
+                                              },
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+                                                Checkbox(
+                                                    value: _agreedWithTerms,
+                                                    onChanged: (value) => {
+                                                          setState(() {
+                                                            _agreedWithTerms =
+                                                                value!;
+                                                          })
+                                                        }),
+                                                Text(
+                                                    L
+                                                        .of(context)!
+                                                        .agree_with_terms,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onBackground,
+                                                        )),
+                                                const SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                    L
+                                                        .of(context)!
+                                                        .terms_and_conditions,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .displaySmall!
+                                                        .copyWith(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .onBackground,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline)),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 20),
+                                            CustomSubmitButton(
+                                              enabled: _agreedWithTerms,
+                                              callback: _onSubmit,
+                                              text: L.of(context)!.sign_up,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
+                                              textColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .onPrimary,
+                                            ),
+                                          ])),
+                                  // * This SizedBox is used to push the form up when the keyboard is open
+                                  SizedBox(
+                                      height: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom >
+                                              0
+                                          ? MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom
+                                          : MediaQuery.of(context).size.height *
+                                              0.1),
+                                ]))
+                      ]),
+                ),
           if (!_submitting && !_omitTopBackground)
             Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

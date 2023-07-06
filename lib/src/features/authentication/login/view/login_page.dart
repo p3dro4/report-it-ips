@@ -126,13 +126,8 @@ class _LoginPageState extends State<LoginPage> {
                                     )),
                                 // * This SizedBox is used to push the form up when the keyboard is open
                                 SizedBox(
-                                    height: MediaQuery.of(context)
-                                                .viewInsets
-                                                .bottom >
-                                            0
-                                        ? 15
-                                        : MediaQuery.of(context).size.height *
-                                            0.05),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.05),
                                 Form(
                                     key: _formKey,
                                     child: Column(

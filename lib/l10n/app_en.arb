@@ -102,5 +102,25 @@
     "passwords_mismatch": "Passwords do not match",
     "@passwords_mismatch": {
         "description": "Passwords mismatch message"
+    },
+    "conclude_registration": "Finish registering",
+    "@conclude_registration": {
+        "description": "Conclude registration text"
+    },
+    "fill_in_your_personal_details": "Fill in your personal details",
+    "@fill_in_your_personal_details": {
+        "description": "Fill in your personal details text"
+    },
+    "select_account_type": "Select account type",
+    "@select_account_type": {
+        "description": "Select account type text"
+    },
+    "agree_with_terms": "I agree with the",
+    "@agree_with_terms": {
+        "description": "Agree with terms text"
+    },
+    "terms_and_conditions": "Terms and conditions",
+    "@terms_and_conditions": {
+        "description": "Terms and conditions text"
     }
 }

@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/authentication/authentication.dart';
 import 'package:report_it_ips/src/features/main_feed/main_feed.dart';
+import 'package:report_it_ips/src/features/register/account_type/account_type.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -37,9 +38,21 @@ class _MainAppState extends State<MainApp> {
         );
       } else {
         // User is logged in
-        _navigatorKey.currentState?.pushReplacement(
-          MaterialPageRoute(builder: (_) => const MainFeedPage()),
-        );
+        VerifyAccount.isProfileComplete().then((isComplete) => {
+              _navigatorKey.currentState?.popUntil((route) => route.isFirst),
+              if (isComplete)
+                {
+                  _navigatorKey.currentState?.pushReplacement(
+                    MaterialPageRoute(builder: (_) => const MainFeedPage()),
+                  )
+                }
+              else
+                {
+                  _navigatorKey.currentState?.pushReplacement(
+                    MaterialPageRoute(builder: (_) => const AccountTypePage()),
+                  )
+                }
+            });
       }
     });
     super.initState();
@@ -54,8 +67,13 @@ class _MainAppState extends State<MainApp> {
         colorScheme: ColorScheme.fromSwatch(
           primarySwatch: MaterialColorGenerator.from(const Color(0xFF948A85)),
           backgroundColor: Colors.white,
+        ).copyWith(
+          onBackground: Colors.black,
         ),
         primaryColor: const Color(0xFF948A85),
+        primaryColorLight: const Color(0xFFcfcac8),
+        brightness: Brightness.light,
+        fontFamily: "Roboto",
         textTheme: TextTheme(
           displayLarge: const TextStyle(
             fontSize: 36,
@@ -68,8 +86,6 @@ class _MainAppState extends State<MainApp> {
             color: Colors.grey[500],
           ),
         ),
-        primaryColorLight: const Color(0xFFcfcac8),
-        brightness: Brightness.light,
         useMaterial3: true,
       ),
       localizationsDelegates: const [
@@ -80,7 +96,7 @@ class _MainAppState extends State<MainApp> {
       ],
       supportedLocales: const [
         Locale('pt', 'PT'),
-        // * Uncomment this line to add support for English
+        // ! Uncomment this line to add support for English
         //Locale('en', 'US'),
       ],
       // remove debug banner

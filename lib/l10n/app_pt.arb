@@ -24,5 +24,10 @@
     "weak_password": "A palavra-passe introduzida é fraca",
     "unknown_error": "Ocorreu um erro desconhecido",
     "passwords_mismatch": "As palavras-passe introduzidas não coincidem",
-    "email_already_in_use": "O email introduzido já está a ser utilizado"
+    "email_already_in_use": "O email introduzido já está a ser utilizado",
+    "conclude_registration": "Concluir registo",
+    "fill_in_your_personal_details": "Preencha os seus dados pessoais",
+    "select_account_type": "Selecione o tipo de conta",
+    "agree_with_terms": "Concordo com os",
+    "terms_and_conditions": "Termos e Condições"
 }
