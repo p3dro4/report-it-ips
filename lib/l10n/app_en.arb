@@ -122,5 +122,21 @@
     "terms_and_conditions": "Terms and conditions",
     "@terms_and_conditions": {
         "description": "Terms and conditions text"
+    },
+    "student": "Student",
+    "@student": {
+        "description": "Student account type"
+    },
+    "teacher": "Teacher",
+    "@teacher": {
+        "description": "Teacher account type"
+    },
+    "staff": "Staff",
+    "@staff": {
+        "description": "Staff account type"
+    },
+    "next": "Next",
+    "@next": {
+        "description": "Next button"
     }
 }

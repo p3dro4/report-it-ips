@@ -29,5 +29,9 @@
     "fill_in_your_personal_details": "Preencha os seus dados pessoais",
     "select_account_type": "Selecione o tipo de conta",
     "agree_with_terms": "Concordo com os",
-    "terms_and_conditions": "Termos e Condições"
+    "terms_and_conditions": "Termos e Condições",
+    "student": "Estudante",
+    "teacher": "Professor",
+    "staff": "Funcionário",
+    "next": "Continuar"
 }

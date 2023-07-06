@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/utils/background_image.dart';
+import 'package:report_it_ips/src/features/register/models/models.dart';
+import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountTypePage extends StatefulWidget {
@@ -12,6 +13,7 @@ class AccountTypePage extends StatefulWidget {
 
 class _AccountTypePageState extends State<AccountTypePage> {
   bool _submitting = false;
+  AccountTypes? _accountType;
 
   @override
   Widget build(BuildContext context) {
@@ -43,16 +45,59 @@ class _AccountTypePageState extends State<AccountTypePage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.17),
+                          height: MediaQuery.of(context).size.height * 0.15),
                       Text(
                         L.of(context)!.conclude_registration,
                         style: Theme.of(context).textTheme.displayLarge,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       Text(
                         L.of(context)!.select_account_type,
                         style: Theme.of(context).textTheme.displaySmall,
                       ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.05),
+                      Center(
+                        child: Column(children: [
+                          CustomLargeButton(
+                            callback: () => {
+                              setState(() {
+                                _accountType = AccountTypes.student;
+                              })
+                            },
+                            isSelected: _accountType == AccountTypes.student,
+                            icon: Icons.person,
+                            text: L.of(context)!.student,
+                          ),
+                          const SizedBox(height: 25),
+                          CustomLargeButton(
+                              callback: () => {
+                                    setState(() {
+                                      _accountType = AccountTypes.teacher;
+                                    })
+                                  },
+                              isSelected: _accountType == AccountTypes.teacher,
+                              icon: Icons.school,
+                              text: L.of(context)!.teacher),
+                          const SizedBox(height: 25),
+                          CustomLargeButton(
+                              callback: () => {
+                                    setState(() {
+                                      _accountType = AccountTypes.staff;
+                                    })
+                                  },
+                              isSelected: _accountType == AccountTypes.staff,
+                              icon: Icons.man_4,
+                              text: L.of(context)!.staff),
+                          const SizedBox(height: 50),
+                          CustomSubmitButton(
+                            enabled: _accountType != null,
+                            color: Theme.of(context).colorScheme.primary,
+                            text: L.of(context)!.next,
+                            textColor: Theme.of(context).colorScheme.onPrimary,
+                          )
+                        ]),
+                      )
                     ]),
               ),
       ],
