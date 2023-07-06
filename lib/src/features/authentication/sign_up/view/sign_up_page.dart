@@ -63,6 +63,7 @@ class _SignUpPageState extends State<SignUpPage> {
         backgroundColor: Theme.of(context).colorScheme.error,
       );
     }
+    return null;
   }
 
   Future<void> _firebaseRegister(UserCredential userCredential) async {

@@ -15,16 +15,21 @@ class _MainFeedPageState extends State<MainFeedPage> {
 
   @override
   void initState() {
-    isRegistered().then((registered) => {
-          if (!registered)
-            {
-              Navigator.popUntil(context, (route) => route.isFirst),
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const RegisterPage()),
-              )
-            }
-        });
+    isRegistered()
+        .then((registered) => {
+              if (!registered)
+                {
+                  Navigator.popUntil(context, (route) => route.isFirst),
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
+                  )
+                }
+            })
+        .then((value) => {
+              setState(() => processing = false)
+            });
     super.initState();
   }
 
@@ -43,9 +48,6 @@ class _MainFeedPageState extends State<MainFeedPage> {
         return data["profileCompleted"] as bool;
       }
     }
-    setState(() {
-      processing = false;
-    });
     return false;
   }
 
