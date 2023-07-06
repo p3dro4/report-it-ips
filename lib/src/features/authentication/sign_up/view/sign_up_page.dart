@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  FirebaseFirestore? _database;
   String? _fieldConfirmPassword;
   String? _fieldEmail;
   String? _fieldPassword;
@@ -18,21 +20,28 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _omitTopBackground = false;
   bool _submitting = false;
 
-  Future<void> _firebaseSignUp(
+  @override
+  void initState() {
+    _database = FirebaseFirestore.instance;
+    super.initState();
+  }
+
+  Future<UserCredential?> _firebaseSignUp(
       {required String email, required String password}) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       // Mostrar mensagem de sucesso
-      if (!mounted) return;
+      if (!mounted) return null;
       showSnackbar(
         context: context,
         message: L.of(context)!.account_created_successfully,
         backgroundColor: Colors.green,
       );
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         showSnackbar(
@@ -47,6 +56,23 @@ class _SignUpPageState extends State<SignUpPage> {
           backgroundColor: Theme.of(context).colorScheme.error,
         );
       }
+    } catch (e) {
+      showSnackbar(
+        context: context,
+        message: L.of(context)!.unknown_error,
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    }
+  }
+
+  Future<void> _firebaseRegister(UserCredential userCredential) async {
+    try {
+      final userId = userCredential.user!.uid;
+      final user = <String, dynamic>{
+        "userId": userId,
+        "profileCompleted": false,
+      };
+      await _database!.collection("users").add(user);
     } catch (e) {
       showSnackbar(
         context: context,
@@ -86,8 +112,9 @@ class _SignUpPageState extends State<SignUpPage> {
     await _firebaseSignUp(
       email: _fieldEmail!,
       password: _fieldPassword!,
-    );
-
+    ).then((value) => {
+          if (value != null) {_firebaseRegister(value)}
+        });
     setState(() {
       _submitting = false;
     });
