@@ -8,11 +8,11 @@ class VerifyAccount {
     if (user != null) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .where(DatabaseNames.uid.value, isEqualTo: user.uid)
+          .where(DatabaseNames.uid.name, isEqualTo: user.uid)
           .get();
       for (final doc in userDoc.docs) {
         final data = doc.data();
-        return data[DatabaseNames.profileCompleted.value] as bool;
+        return data[DatabaseNames.profileCompleted.name] as bool;
       }
     }
     return false;

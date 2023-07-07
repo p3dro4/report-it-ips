@@ -71,8 +71,8 @@ class _SignUpPageState extends State<SignUpPage> {
     try {
       final uid = userCredential.user!.uid;
       final user = <String, dynamic>{
-        DatabaseNames.uid.value: uid,
-        DatabaseNames.profileCompleted.value: false,
+        DatabaseNames.uid.name: uid,
+        DatabaseNames.profileCompleted.name: false,
       };
       await _database!.collection("users").add(user);
     } catch (e) {
