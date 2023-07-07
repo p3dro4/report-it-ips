@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
+import 'package:report_it_ips/src/features/register/personal_information/view/personal_information_page.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -15,6 +17,23 @@ class _AccountTypePageState extends State<AccountTypePage> {
   bool _submitting = false;
   AccountTypes? _accountType;
 
+  Future<AppUser> _continueToNextPage() async {
+    setState(() {
+      _submitting = true;
+    });
+    final user = AppUser(userType: _accountType!.name);
+    // ! Uncomment this code to save the user to the database
+    /* final uid = FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .set(user.toJson(), SetOptions(merge: true));
+    setState(() {
+      _submitting = false;
+    }); */
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +41,7 @@ class _AccountTypePageState extends State<AccountTypePage> {
             child: Stack(
       children: [
         const BackgroundImage(top: true, bottom: true),
-        // ! back button used for debugging remove later
+        // ? Remove this CloseButton
         Padding(
             padding: const EdgeInsets.all(30),
             child: CloseButton(
@@ -95,6 +114,16 @@ class _AccountTypePageState extends State<AccountTypePage> {
                             color: Theme.of(context).colorScheme.primary,
                             text: L.of(context)!.next,
                             textColor: Theme.of(context).colorScheme.onPrimary,
+                            callback: _accountType != null
+                                ? () => _continueToNextPage().then((value) => {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (_) =>
+                                                  PersonalInformationPage(
+                                                    user: value,
+                                                  )))
+                                    })
+                                : null,
                           )
                         ]),
                       )

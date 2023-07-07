@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'utils.dart';
+import '../../utils.dart';
 
 class VerifyAccount {
   static Future<bool> isProfileComplete() async {
@@ -8,12 +8,9 @@ class VerifyAccount {
     if (user != null) {
       final userDoc = await FirebaseFirestore.instance
           .collection('users')
-          .where(DatabaseNames.uid.name, isEqualTo: user.uid)
+          .doc(user.uid)
           .get();
-      for (final doc in userDoc.docs) {
-        final data = doc.data();
-        return data[DatabaseNames.profileCompleted.name] as bool;
-      }
+      return userDoc[UserFields.profileCompleted.name] as bool;
     }
     return false;
   }

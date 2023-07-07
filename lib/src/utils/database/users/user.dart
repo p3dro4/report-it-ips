@@ -1,4 +1,4 @@
-enum DatabaseNames {
+enum UserFields {
   uid,
   name,
   email,

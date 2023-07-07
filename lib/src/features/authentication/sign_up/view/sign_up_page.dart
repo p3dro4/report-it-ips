@@ -12,7 +12,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  FirebaseFirestore? _database;
   String? _fieldConfirmPassword;
   String? _fieldEmail;
   String? _fieldPassword;
@@ -20,12 +19,6 @@ class _SignUpPageState extends State<SignUpPage> {
   bool _agreedWithTerms = false;
   bool _omitTopBackground = false;
   bool _submitting = false;
-
-  @override
-  void initState() {
-    _database = FirebaseFirestore.instance;
-    super.initState();
-  }
 
   Future<UserCredential?> _firebaseSignUp(
       {required String email, required String password}) async {
@@ -69,12 +62,13 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _firebaseRegister(UserCredential userCredential) async {
     try {
-      final uid = userCredential.user!.uid;
-      final user = <String, dynamic>{
-        DatabaseNames.uid.name: uid,
-        DatabaseNames.profileCompleted.name: false,
-      };
-      await _database!.collection("users").add(user);
+      final user = userCredential.user!;
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .set(<String, dynamic>{
+        UserFields.profileCompleted.name: false,
+      });
     } catch (e) {
       showSnackbar(
         context: context,

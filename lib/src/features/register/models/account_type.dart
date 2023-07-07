@@ -1,1 +1,6 @@
-enum AccountTypes { student, teacher, staff, admin }
+enum AccountTypes {
+  student,
+  teacher,
+  staff,
+  admin;
+}
