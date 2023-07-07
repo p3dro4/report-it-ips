@@ -69,10 +69,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Future<void> _firebaseRegister(UserCredential userCredential) async {
     try {
-      final userId = userCredential.user!.uid;
+      final uid = userCredential.user!.uid;
       final user = <String, dynamic>{
-        "userId": userId,
-        "profileCompleted": false,
+        DatabaseNames.uid.value: uid,
+        DatabaseNames.profileCompleted.value: false,
       };
       await _database!.collection("users").add(user);
     } catch (e) {
