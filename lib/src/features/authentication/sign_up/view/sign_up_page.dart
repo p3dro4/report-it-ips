@@ -360,16 +360,12 @@ class _SignUpPageState extends State<SignUpPage> {
             Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Padding(
-                      padding: const EdgeInsets.all(35),
-                      child: Align(
-                          alignment: Alignment.topLeft,
-                          child: CustomBackButton(
+                  CustomBackButton(
                               callback: () => {
                                     Navigator.of(context).pop(),
                                   },
                               text: L.of(context)!.back,
-                              color: Theme.of(context).colorScheme.primary))),
+                              color: Theme.of(context).colorScheme.primary),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: Align(

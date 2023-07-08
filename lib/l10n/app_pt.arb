@@ -33,5 +33,14 @@
     "student": "Estudante",
     "teacher": "Professor",
     "staff": "Funcionário",
-    "next": "Continuar"
+    "next": "Continuar",
+    "name": "Nome Completo",
+    "name_required": "O campo nome é obrigatório",
+    "birthdate": "Data de Nascimento",
+    "birthdate_required": "O campo data de nascimento é obrigatório",
+    "gender": "Género",
+    "gender_required": "O campo género é obrigatório",
+    "male": "Masculino",
+    "female": "Feminino",
+    "other": "Outro"
 }

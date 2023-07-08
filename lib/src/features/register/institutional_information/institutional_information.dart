@@ -1,0 +1,1 @@
+export 'view/institutional_information_page.dart';

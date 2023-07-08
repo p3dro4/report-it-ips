@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
@@ -21,16 +21,16 @@ class _AccountTypePageState extends State<AccountTypePage> {
     setState(() {
       _submitting = true;
     });
-    final user = AppUser(userType: _accountType!.name);
+    final user = AppUser(userType: _accountType);
     // ! Uncomment this code to save the user to the database
     /* final uid = FirebaseAuth.instance.currentUser!.uid;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
-        .set(user.toJson(), SetOptions(merge: true));
+        .set(user.toJson(), SetOptions(merge: true));*/
     setState(() {
       _submitting = false;
-    }); */
+    });
     return user;
   }
 

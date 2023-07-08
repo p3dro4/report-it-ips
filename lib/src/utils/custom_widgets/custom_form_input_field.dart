@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class CustomFormInputField extends StatelessWidget {
+class CustomFormInputField extends StatefulWidget {
   const CustomFormInputField(
       {super.key,
-      this.prefixIcon,
-      this.labelText,
+      required this.prefixIcon,
+      required this.labelText,
       this.suffixIcon,
       this.callbackSuffixIcon,
       this.obscureText = false,
@@ -14,9 +14,10 @@ class CustomFormInputField extends StatelessWidget {
       this.textInputAction,
       this.onFieldSubmitted,
       this.color = Colors.black,
-      this.errorColor = Colors.red});
-  final IconData? prefixIcon;
-  final String? labelText;
+      this.errorColor = Colors.red,
+      this.textCapitalization = TextCapitalization.none});
+  final IconData prefixIcon;
+  final String labelText;
   final Color color;
   final Color errorColor;
   final IconData? suffixIcon;
@@ -27,7 +28,13 @@ class CustomFormInputField extends StatelessWidget {
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
+  final TextCapitalization textCapitalization;
 
+  @override
+  State<CustomFormInputField> createState() => _CustomFormInputFieldState();
+}
+
+class _CustomFormInputFieldState extends State<CustomFormInputField> {
   InputDecoration _inputFieldDecorations(IconData prefixIcon, String labelText,
       Color color, Color errorColor, IconData? suffixIcon, Function? callback) {
     var decorations = InputDecoration(
@@ -70,14 +77,21 @@ class CustomFormInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: _inputFieldDecorations(prefixIcon!, labelText!, color,
-          errorColor, suffixIcon, callbackSuffixIcon),
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      obscureText: obscureText,
-      validator: validator,
-      onSaved: onSaved,
-      onFieldSubmitted: onFieldSubmitted,
+      decoration: _inputFieldDecorations(
+          widget.prefixIcon,
+          widget.labelText,
+          widget.color,
+          widget.errorColor,
+          widget.suffixIcon,
+          widget.callbackSuffixIcon),
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      obscureText: widget.obscureText,
+      validator: widget.validator,
+      onSaved: widget.onSaved,
+      textCapitalization: widget.textCapitalization,
+      onFieldSubmitted: widget.onFieldSubmitted,
+      onTapOutside: (value) => FocusScope.of(context).unfocus(),
     );
   }
 }

@@ -1,7 +1,8 @@
 enum UserFields {
   uid,
   name,
-  email,
+  birthdate,
+  gender,
   userType,
   profileCompleted;
 }

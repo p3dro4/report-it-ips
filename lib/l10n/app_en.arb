@@ -138,5 +138,35 @@
     "next": "Next",
     "@next": {
         "description": "Next button"
-    }
+    },
+    "name": "Full Name",
+    "@name": {
+        "description": "User name"
+    },
+    "name_required": "Please provide a name",
+    "@name_required": {
+        "description": "Name validation"
+    },
+    "birthdate": "Birthdate",
+    "@birthdate": {
+        "description": "User birthdate"
+    },
+    "birthdate_required": "Please provide a birthdate",
+    "@birthdate_required": {
+        "description": "Birthdate validation"
+    },
+    "gender": " Gender",
+    "@gender": {
+        "description": "User gender"
+    },
+    "gender_required": "Please provide a gender",
+    "male": "Male",
+    "@male": {
+        "description": "Male gender"
+    },
+    "female": "Female",
+    "@female": {
+        "description": "Female gender"
+    },
+    "other": "Other"
 }
