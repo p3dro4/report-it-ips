@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/register/models/schools/schools.dart';
-import 'package:report_it_ips/src/utils/custom_widgets/custom_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 
-class StudentFormPage extends StatefulWidget {
-  const StudentFormPage({super.key, required this.user, this.onSubmit});
+class StaffFormPage extends StatefulWidget {
+  const StaffFormPage({super.key, required this.user, this.onSubmit});
   final AppUser user;
   final Function? onSubmit;
 
   @override
-  State<StudentFormPage> createState() => _StudentFormPageState();
+  State<StaffFormPage> createState() => _StaffFormPageState();
 }
 
-class _StudentFormPageState extends State<StudentFormPage> {
+class _StaffFormPageState extends State<StaffFormPage> {
   final _formKey = GlobalKey<FormState>();
   School? _school;
-  String? _course;
-  String? _schoolYear;
+  String? _position;
   AppUser? user;
 
   @override
@@ -37,8 +34,7 @@ class _StudentFormPageState extends State<StudentFormPage> {
       return;
     }
     user!.school = _school;
-    user!.course = _course;
-    user!.schoolYear = int.parse(_schoolYear!);
+    user!.position = _position;
     widget.onSubmit!(user!);
   }
 
@@ -73,50 +69,29 @@ class _StudentFormPageState extends State<StudentFormPage> {
               ),
               const SizedBox(height: 40),
               CustomDropdownButton(
-                items: switch (_school) {
-                  School.ests => {
-                      for (var e in ESTSCourses.values) e.name: e.fullName
-                    },
-                  _ => {},
+                items: {
+                  "administration": L.of(context)!.administration,
+                  "maintenance": L.of(context)!.maintenance,
+                  "cleaning": L.of(context)!.cleaning,
+                  "security": L.of(context)!.security,
+                  "cook": L.of(context)!.cook,
+                  "external": L.of(context)!.external_position,
+                  "other": L.of(context)!.other,
                 },
-                label: L.of(context)!.course,
-                prefixIcon: Icons.school_outlined,
+                label: L.of(context)!.position,
+                prefixIcon: Icons.business_center_outlined,
                 color: Theme.of(context).colorScheme.primary,
                 errorColor: Theme.of(context).colorScheme.error,
                 validator: (value) {
                   if (value?.isEmpty ?? true) {
-                    return L.of(context)!.course_required;
+                    return L.of(context)!.position_required;
                   }
                   return null;
                 },
                 onSaved: (value) => {
-                  _course = value,
+                  _position = value,
                 },
               ),
-              const SizedBox(height: 15),
-              CustomFormInputField(
-                prefixIcon: Icons.numbers_outlined,
-                labelText: L.of(context)!.school_year,
-                color: Theme.of(context).colorScheme.primary,
-                errorColor: Theme.of(context).colorScheme.error,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                validator: (value) {
-                  try {
-                    int.parse(value!);
-                  } catch (e) {
-                    return L.of(context)!.school_year_invalid;
-                  }
-                  if (value?.isEmpty ?? true) {
-                    return L.of(context)!.school_year_required;
-                  } else if (int.parse(value!) < 1 || int.parse(value!) > 10) {
-                    return L.of(context)!.school_year_invalid;
-                  }
-                  return null;
-                },
-                onSaved: (value) => {_schoolYear = value},
-                onFieldSubmitted: (value) => _onSubmit(),
-              )
             ],
           ),
         ),

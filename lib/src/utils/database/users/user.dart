@@ -6,6 +6,8 @@ enum UserFields {
   school,
   course,
   schoolYear,
+  department,
+  position,
   userType,
   profileCompleted;
 }

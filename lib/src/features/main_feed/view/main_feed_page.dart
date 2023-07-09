@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:report_it_ips/src/features/register/models/app_user.dart';
 
 class MainFeedPage extends StatefulWidget {
-  const MainFeedPage({super.key});
+  const MainFeedPage({super.key, this.user});
 
+  final AppUser? user;
   @override
   State<MainFeedPage> createState() => _MainFeedPageState();
 }
 
 class _MainFeedPageState extends State<MainFeedPage> {
   bool processing = false;
+  AppUser? user;
+
+  @override
+  void initState() {
+    if (widget.user != null) {
+      user = widget.user;
+    } else {
+      user = AppUser();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

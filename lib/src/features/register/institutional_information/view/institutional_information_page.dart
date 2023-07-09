@@ -46,6 +46,13 @@ class _InstitutionalInformationPageState
     });
   }
 
+  MaterialPageRoute _mainScreen() {
+    return MaterialPageRoute(
+        builder: (context) => MainFeedPage(
+              user: user!,
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).viewInsets.bottom == 0
@@ -88,17 +95,30 @@ class _InstitutionalInformationPageState
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.05),
-                            //TODO: Add Teacher and Staff forms
-                            StudentFormPage(
-                              user: user!,
-                              onSubmit: (value) => {
-                                _onSubmit(value).then((value) => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainFeedPage())))
-                              },
-                            )
+                            switch (user!.userType) {
+                              AccountTypes.student => StudentFormPage(
+                                  user: user!,
+                                  onSubmit: (value) => {
+                                    _onSubmit(value).then((value) =>
+                                        Navigator.push(context, _mainScreen()))
+                                  },
+                                ),
+                              AccountTypes.teacher => TeacherFormPage(
+                                  user: user!,
+                                  onSubmit: (value) => {
+                                    _onSubmit(value).then((value) =>
+                                        Navigator.push(context, _mainScreen()))
+                                  },
+                                ),
+                              AccountTypes.staff => StaffFormPage(
+                                  user: user!,
+                                  onSubmit: (value) => {
+                                    _onSubmit(value).then((value) =>
+                                        Navigator.push(context, _mainScreen()))
+                                  },
+                                ),
+                              _ => Container(),
+                            }
                           ]))),
           if (!_keyboardIsVisible)
             CustomBackButton(

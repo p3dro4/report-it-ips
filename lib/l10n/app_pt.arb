@@ -51,5 +51,16 @@
     "school_year": "Ano Curricular",
     "school_year_required": "O campo ano curricular é obrigatório",
     "school_year_invalid": "O ano curricular introduzido não é válido",
-    "finish_registration": "Concluir registo"
+    "finish_registration": "Concluir registo",
+    "department": "Departamento",
+    "department_required": "O campo departamento é obrigatório",
+    "position": "Cargo",
+    "position_required": "O campo cargo é obrigatório",
+    "maintenance": "Manutenção",
+    "library": "Biblioteca",
+    "administration": "Administração",
+    "cleaning": "Limpeza",
+    "security": "Segurança",
+    "cook": "Cozinha",
+    "external_position": "Externo"
 }

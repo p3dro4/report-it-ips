@@ -204,5 +204,28 @@
     "finish_registration": "Finish registration",
     "@finish_registration": {
         "description": "Finish registration text"
-    }
+    },
+    "department": "Department",
+    "@department": {
+        "description": "User department"
+    },
+    "department_required": "Please provide a department",
+    "@department_required": {
+        "description": "Department validation"
+    },
+    "position": "Position",
+    "@position": {
+        "description": "User position"
+    },
+    "position_required": "Please provide a position",
+    "@position_required": {
+        "description": "Position validation"
+    },
+    "maintenance": "Maintenance",
+    "administration": "Administration",
+    "library": "Library",
+    "cleaning": "Cleaning",
+    "security": "Security",
+    "cook": "Cook",
+    "external_position": "External"
 }
