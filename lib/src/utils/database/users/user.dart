@@ -3,6 +3,9 @@ enum UserFields {
   name,
   birthdate,
   gender,
+  school,
+  course,
+  schoolYear,
   userType,
   profileCompleted;
 }

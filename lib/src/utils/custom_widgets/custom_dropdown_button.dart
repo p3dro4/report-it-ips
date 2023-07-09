@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton extends StatefulWidget {
@@ -9,6 +10,7 @@ class CustomDropdownButton extends StatefulWidget {
       this.errorColor = Colors.red,
       this.onSaved,
       this.validator,
+      this.onChanged,
       required this.items});
   final Map<String, String> items;
   final String label;
@@ -17,6 +19,7 @@ class CustomDropdownButton extends StatefulWidget {
   final FormFieldSetter? onSaved;
   final FormFieldValidator? validator;
   final IconData? prefixIcon;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
@@ -68,13 +71,24 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
         Icons.arrow_drop_down,
         color: widget.color,
       ),
+      menuMaxHeight: 300,
+      isExpanded: true,
       items: widget.items.entries
           .map((e) => DropdownMenuItem(
                 value: e.key,
-                child: Text(e.value),
+                child: AutoSizeText(
+                  e.value,
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                  minFontSize: 5,
+                  maxFontSize: 16,
+                ),
               ))
           .toList(),
-      onChanged: (value) => setState(() => dropdownValue = value),
+      onChanged: (value) => setState(() => {
+            dropdownValue = value,
+            if (widget.onChanged != null) widget.onChanged!(value ?? ""),
+          }),
       validator: widget.validator,
       onSaved: widget.onSaved,
     );

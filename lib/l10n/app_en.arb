@@ -168,5 +168,41 @@
     "@female": {
         "description": "Female gender"
     },
-    "other": "Other"
+    "other": "Other",
+    "fill_in_your_institution_details": "Fill in your institution details",
+    "@fill_in_your_institution_details": {
+        "description": "Fill in your institution details text"
+    },
+    "school": "School",
+    "@school": {
+        "description": "User school"
+    },
+    "school_required": "Please provide a school",
+    "@school_required": {
+        "description": "School validation"
+    },
+    "course": "Course",
+    "@course": {
+        "description": "User course"
+    },
+    "course_required": "Please provide a course",
+    "@course_required": {
+        "description": "Course validation"
+    },
+    "school_year": "School year",
+    "@school_year": {
+        "description": "User school year"
+    },
+    "school_year_required": "Please provide a school year",
+    "@school_year_required": {
+        "description": "School year validation"
+    },
+    "school_year_invalid": "Please provide a valid school year",
+    "@school_year_invalid": {
+        "description": "School year validation"
+    },
+    "finish_registration": "Finish registration",
+    "@finish_registration": {
+        "description": "Finish registration text"
+    }
 }

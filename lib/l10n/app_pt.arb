@@ -42,5 +42,14 @@
     "gender_required": "O campo género é obrigatório",
     "male": "Masculino",
     "female": "Feminino",
-    "other": "Outro"
+    "other": "Outro",
+    "fill_in_your_institution_details": "Preencha os seus dados institucionais",
+    "school": "Escola",
+    "school_required": "O campo escola é obrigatório",
+    "course": "Curso",
+    "course_required": "O campo curso é obrigatório",
+    "school_year": "Ano Curricular",
+    "school_year_required": "O campo ano curricular é obrigatório",
+    "school_year_invalid": "O ano curricular introduzido não é válido",
+    "finish_registration": "Concluir registo"
 }
