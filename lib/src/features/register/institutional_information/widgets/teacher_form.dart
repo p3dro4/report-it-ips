@@ -73,6 +73,15 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
                   School.ests => {
                       for (var e in ESTSDepartments.values) e.name: e.fullName
                     },
+                  School.ese => {
+                      for (var e in ESEDepartments.values) e.name: e.fullName
+                    },
+                  School.ess => {
+                      for (var e in ESSDepartments.values) e.name: e.fullName
+                    },
+                  School.esce => {
+                      for (var e in ESCEDepartments.values) e.name: e.fullName
+                    },
                   _ => {},
                 },
                 label: L.of(context)!.department,

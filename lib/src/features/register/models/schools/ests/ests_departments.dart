@@ -1,4 +1,10 @@
-enum ESTSDepartments { dee, dem, dmat, dsi, secec }
+enum ESTSDepartments {
+  dee,
+  dem,
+  dmat,
+  dsi,
+  secec,
+}
 
 extension ESTSDepartmentsExtension on ESTSDepartments {
   String get name {

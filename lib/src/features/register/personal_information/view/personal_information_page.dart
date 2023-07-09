@@ -1,5 +1,6 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/register/register.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
@@ -7,8 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 
 class PersonalInformationPage extends StatefulWidget {
-  const PersonalInformationPage({super.key, required this.user});
-  final AppUser user;
+  const PersonalInformationPage({super.key});
   @override
   State<PersonalInformationPage> createState() =>
       _PersonalInformationPageState();
@@ -26,15 +26,9 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
   bool _keyboardIsVisible = false;
   bool _submitting = false;
 
-  AppUser? user;
+  AppUser? user = AppUser();
 
-  @override
-  void initState() {
-    user = widget.user;
-    super.initState();
-  }
-
-  void _onSubmit() async {
+  void _onSubmit() {
     setState(() {
       _submitting = true;
     });
@@ -52,17 +46,11 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
     user!.name = _fieldName;
     user!.birthdate = _fieldBirthdate;
     user!.gender = _fieldGender;
-    // ! Uncomment this code to save the user to the database
-    /* final uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .set(user!.toJson(), SetOptions(merge: true)); */
     setState(() {
       _submitting = false;
     });
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => InstitutionalInformationPage(
+        builder: (context) => AccountTypePage(
               user: user!,
             )));
   }
@@ -188,22 +176,28 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                     ])),
                                 const SizedBox(height: 50),
                                 CustomSubmitButton(
-                                  text: L.of(context)!.next,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  textColor:
-                                      Theme.of(context).colorScheme.onPrimary,
-                                  callback: _onSubmit,
-                                ),
+                                    text: L.of(context)!.next,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                    textColor:
+                                        Theme.of(context).colorScheme.onPrimary,
+                                    callback: _onSubmit),
                               ]),
                             )
                           ],
                         ))),
             if (!_keyboardIsVisible)
-              CustomBackButton(
-                text: L.of(context)!.back,
-                callback: () => Navigator.of(context).pop(),
-                color: Theme.of(context).colorScheme.primary,
-              ),
+              Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: CloseButton(
+                      color: Theme.of(context).colorScheme.primary,
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.zero),
+                      ),
+                      onPressed: () => {
+                            FirebaseAuth.instance.signOut(),
+                          })),
           ],
         )));
   }

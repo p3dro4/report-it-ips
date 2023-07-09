@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/register/models/schools/schools.dart';
-import 'package:report_it_ips/src/utils/custom_widgets/custom_widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
@@ -76,6 +74,15 @@ class _StudentFormPageState extends State<StudentFormPage> {
                 items: switch (_school) {
                   School.ests => {
                       for (var e in ESTSCourses.values) e.name: e.fullName
+                    },
+                  School.ese => {
+                      for (var e in ESECourses.values) e.name: e.fullName
+                    },
+                  School.ess => {
+                      for (var e in ESSCourses.values) e.name: e.fullName
+                    },
+                  School.esce => {
+                      for (var e in ESCECourses.values) e.name: e.fullName
                     },
                   _ => {},
                 },

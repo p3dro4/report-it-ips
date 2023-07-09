@@ -1,14 +1,13 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:report_it_ips/src/features/register/institutional_information/view/institutional_information_page.dart';
 import 'package:report_it_ips/src/features/register/models/models.dart';
-import 'package:report_it_ips/src/features/register/personal_information/view/personal_information_page.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountTypePage extends StatefulWidget {
-  const AccountTypePage({super.key});
-
+  const AccountTypePage({super.key, required this.user});
+  final AppUser user;
   @override
   State<AccountTypePage> createState() => _AccountTypePageState();
 }
@@ -16,22 +15,22 @@ class AccountTypePage extends StatefulWidget {
 class _AccountTypePageState extends State<AccountTypePage> {
   bool _submitting = false;
   AccountTypes? _accountType;
+  AppUser? user;
 
-  Future<AppUser> _continueToNextPage() async {
+  @override
+  void initState() {
+    user = widget.user;
+    super.initState();
+  }
+
+  Future<void> _continueToNextPage() async {
     setState(() {
       _submitting = true;
     });
-    final user = AppUser(userType: _accountType);
-    // ! Uncomment this code to save the user to the database
-    /* final uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .set(user.toJson(), SetOptions(merge: true));*/
+    user?.userType = _accountType;
     setState(() {
       _submitting = false;
     });
-    return user;
   }
 
   @override
@@ -44,15 +43,11 @@ class _AccountTypePageState extends State<AccountTypePage> {
         // ? Remove this CloseButton
         Padding(
             padding: const EdgeInsets.all(30),
-            child: CloseButton(
-                color: Theme.of(context).colorScheme.primary,
-                style: ButtonStyle(
-                  padding:
-                      MaterialStateProperty.all<EdgeInsets>(EdgeInsets.zero),
-                ),
-                onPressed: () => {
-                      FirebaseAuth.instance.signOut(),
-                    })),
+            child: CustomBackButton(
+              color: Theme.of(context).colorScheme.onPrimary,
+              text: L.of(context)!.back,
+              callback: () => Navigator.of(context).pop(),
+            )),
         _submitting
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -119,9 +114,8 @@ class _AccountTypePageState extends State<AccountTypePage> {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (_) =>
-                                                  PersonalInformationPage(
-                                                    user: value,
-                                                  )))
+                                                  InstitutionalInformationPage(
+                                                      user: user!)))
                                     })
                                 : null,
                           )

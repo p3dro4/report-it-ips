@@ -23,7 +23,13 @@ enum ESTSCourses {
   ctespTi,
   ctespVe,
   pgMveh,
-  pgTa
+  pgTa,
+  meb,
+  mep,
+  mes,
+  meec,
+  megeie,
+  msht
 }
 
 extension ESTSCoursesExtension on ESTSCourses {
@@ -79,6 +85,18 @@ extension ESTSCoursesExtension on ESTSCourses {
         return 'PG_MVEH';
       case ESTSCourses.pgTa:
         return 'PG_TA';
+      case ESTSCourses.meb:
+        return 'MEB';
+      case ESTSCourses.mep:
+        return 'MEP';
+      case ESTSCourses.mes:
+        return 'MES';
+      case ESTSCourses.meec:
+        return 'MEEC';
+      case ESTSCourses.megeie:
+        return 'MEGEIE';
+      case ESTSCourses.msht:
+        return 'MSHT';
     }
   }
 
@@ -134,6 +152,18 @@ extension ESTSCoursesExtension on ESTSCourses {
         return 'Pós-Graduação em Motorização de Veículos Eléctricos e Híbridos';
       case ESTSCourses.pgTa:
         return 'Pós-Graduação em Tecnologias Aeronáuticas';
+      case ESTSCourses.meb:
+        return 'Mestrado em Engenharia Biomédica';
+      case ESTSCourses.mep:
+        return 'Mestrado em Engenharia de Produção';
+      case ESTSCourses.mes:
+        return 'Mestrado em Engenharia de Software';
+      case ESTSCourses.meec:
+        return 'Mestrado em Engenharia Electrotécnica e de Computadores';
+      case ESTSCourses.megeie:
+        return 'Mestrado em Engenharia e Gestão de Energia na Indústria e Edifícios';
+      case ESTSCourses.msht:
+        return 'Mestrado em Segurança e Higiene no Trabalho';
     }
   }
 }

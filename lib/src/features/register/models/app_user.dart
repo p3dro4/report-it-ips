@@ -19,15 +19,13 @@ class AppUser {
   String? name;
   DateTime? birthdate;
   String? gender;
+  AccountTypes? userType;
   School? school;
   String? course;
   int? schoolYear;
   String? department;
   String? position;
   bool profileCompleted = false;
-
-  //required fields
-  final AccountTypes? userType;
 
   factory AppUser.fromSnapshot(Object? snapshot) {
     final user = snapshot as Map<Object?, Object?>;
@@ -39,13 +37,17 @@ class AppUser {
           ? School.values.firstWhere(
               (e) => e.name == user[UserFields.school.name] as String)
           : null,
+      userType: user[UserFields.userType.name] != null
+          ? AccountTypes.values.firstWhere(
+              (e) => e.name == user[UserFields.userType.name] as String)
+          : null,
       course: user[UserFields.course.name] as String?,
       schoolYear: user[UserFields.schoolYear.name] as int?,
       department: user[UserFields.department.name] as String?,
       position: user[UserFields.position.name] as String?,
     );
   }
-
+  
   Map<String, dynamic> toJson() => <String, dynamic>{
         UserFields.name.name: name,
         UserFields.birthdate.name: birthdate,
