@@ -38,6 +38,9 @@ class _MainAppState extends State<MainApp> {
         );
       } else {
         // User is logged in
+        _navigatorKey.currentState?.pushReplacement(
+          MaterialPageRoute(builder: (_) => const CustomLoadingPage()),
+        );
         VerifyAccount.isProfileComplete().then((isComplete) => {
               _navigatorKey.currentState?.popUntil((route) => route.isFirst),
               if (isComplete)
