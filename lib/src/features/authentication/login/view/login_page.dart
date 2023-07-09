@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:report_it_ips/src/features/authentication/login/services/auth_service.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/features/authentication/authentication.dart';
@@ -264,21 +265,42 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ProviderButton(
-                        onPressed: () => {},
+                        onPressed: () async => {
+                          await AuthService.signInWithGoogle().then(
+                            (value) => showSnackbar(
+                                context: context,
+                                message: L.of(context)!.login_success,
+                                backgroundColor: Colors.green),
+                          ),
+                        },
                         imageLocation: "assets/images/icons/google.png",
                         height: 48,
                         width: 48,
                       ),
                       const SizedBox(width: 40),
                       ProviderButton(
-                        onPressed: () => {},
+                        onPressed: () async => {
+                          await AuthService.signInWithMicrosoft().then(
+                            (value) => showSnackbar(
+                                context: context,
+                                message: L.of(context)!.login_success,
+                                backgroundColor: Colors.green),
+                          ),
+                        },
                         imageLocation: "assets/images/icons/microsoft.png",
                         height: 36,
                         width: 36,
                       ),
                       const SizedBox(width: 40),
                       ProviderButton(
-                        onPressed: () => {},
+                        onPressed: () async => {
+                          await AuthService.signInWithTwitter().then(
+                            (value) => showSnackbar(
+                                context: context,
+                                message: L.of(context)!.login_success,
+                                backgroundColor: Colors.green),
+                          ),
+                        },
                         imageLocation: "assets/images/icons/twitter.png",
                         height: 38,
                         width: 38,

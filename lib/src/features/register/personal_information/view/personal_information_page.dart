@@ -157,9 +157,9 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
                                         errorColor:
                                             Theme.of(context).colorScheme.error,
                                         items: {
-                                          "male": L.of(context)!.male,
-                                          "female": L.of(context)!.female,
-                                          "other": L.of(context)!.other
+                                          "MALE": L.of(context)!.male,
+                                          "FEMALE": L.of(context)!.female,
+                                          "OTHER": L.of(context)!.other
                                         },
                                         validator: (value) {
                                           if (value?.isEmpty ?? true) {

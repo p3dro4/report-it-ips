@@ -13,6 +13,7 @@ class AppUser {
     this.schoolYear,
     this.department,
     this.position,
+    this.profileCompleted = false,
   });
 
   //fields
@@ -25,7 +26,7 @@ class AppUser {
   int? schoolYear;
   String? department;
   String? position;
-  bool profileCompleted = false;
+  bool profileCompleted;
 
   factory AppUser.fromSnapshot(Object? snapshot) {
     final user = snapshot as Map<Object?, Object?>;
@@ -45,6 +46,8 @@ class AppUser {
       schoolYear: user[UserFields.schoolYear.name] as int?,
       department: user[UserFields.department.name] as String?,
       position: user[UserFields.position.name] as String?,
+      profileCompleted:
+          user[UserFields.profileCompleted.name] as bool? ?? false,
     );
   }
 
@@ -60,4 +63,9 @@ class AppUser {
         UserFields.userType.name: userType?.name,
         UserFields.profileCompleted.name: profileCompleted,
       };
+
+  @override
+  String toString() {
+    return "### User ###\nName: $name\nBirthdate: $birthdate\nGender: $gender\nSchool: $school\nCourse: ${course ?? ""}\nSchool Year: ${schoolYear ?? ""}\nDepartment: ${department ?? ""}\nPosition: ${position ?? ""}\nUserType:$userType\nProfile Completed: $profileCompleted\n";
+  }
 }
