@@ -1,7 +1,7 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/register/institutional_information/view/institutional_information_page.dart';
-import 'package:report_it_ips/src/features/register/models/models.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:report_it_ips/src/features/register/models/models.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 
 class AppUser {
@@ -47,7 +47,7 @@ class AppUser {
       position: user[UserFields.position.name] as String?,
     );
   }
-  
+
   Map<String, dynamic> toJson() => <String, dynamic>{
         UserFields.name.name: name,
         UserFields.birthdate.name: birthdate,

@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/register/register.dart';
-import 'package:report_it_ips/src/features/register/models/models.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 

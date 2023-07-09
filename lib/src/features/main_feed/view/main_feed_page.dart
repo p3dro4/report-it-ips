@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:report_it_ips/src/features/register/models/app_user.dart';
+import 'package:report_it_ips/src/features/models/app_user.dart';
 
 class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key, this.user});
