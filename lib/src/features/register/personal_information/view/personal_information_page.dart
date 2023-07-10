@@ -43,7 +43,7 @@ class _PersonalInformationPageState extends State<PersonalInformationPage> {
           backgroundColor: Theme.of(context).colorScheme.error);
       return;
     }
-    user!.name = _fieldName;
+    user!.name = _fieldName!.trim();
     user!.birthdate = _fieldBirthdate;
     user!.gender = _fieldGender;
     setState(() {

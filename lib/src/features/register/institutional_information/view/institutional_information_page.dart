@@ -46,11 +46,16 @@ class _InstitutionalInformationPageState
     });
   }
 
-  MaterialPageRoute _mainScreen() {
-    return MaterialPageRoute(
-        builder: (context) => MainFeedPage(
-              user: user!,
-            ));
+  void _submitAndRedirect(AppUser value) {
+    _onSubmit(value).then((value) => {
+          Navigator.of(context).popUntil((route) => route.isFirst),
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MainFeedPage(
+                        user: user!,
+                      )))
+        });
   }
 
   @override
@@ -98,24 +103,18 @@ class _InstitutionalInformationPageState
                             switch (user!.userType) {
                               AccountTypes.student => StudentFormPage(
                                   user: user!,
-                                  onSubmit: (value) => {
-                                    _onSubmit(value).then((value) =>
-                                        Navigator.push(context, _mainScreen()))
-                                  },
+                                  onSubmit: (value) =>
+                                      _submitAndRedirect(value),
                                 ),
                               AccountTypes.teacher => TeacherFormPage(
                                   user: user!,
-                                  onSubmit: (value) => {
-                                    _onSubmit(value).then((value) =>
-                                        Navigator.push(context, _mainScreen()))
-                                  },
+                                  onSubmit: (value) =>
+                                      _submitAndRedirect(value),
                                 ),
                               AccountTypes.staff => StaffFormPage(
                                   user: user!,
-                                  onSubmit: (value) => {
-                                    _onSubmit(value).then((value) =>
-                                        Navigator.push(context, _mainScreen()))
-                                  },
+                                  onSubmit: (value) =>
+                                      _submitAndRedirect(value),
                                 ),
                               _ => Container(),
                             }

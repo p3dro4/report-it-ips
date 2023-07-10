@@ -23,6 +23,7 @@ dependencies:
   google_maps_flutter: ^2.2.6
   google_sign_in: ^6.1.4
   intl: any
+  path_provider: ^2.0.15
   permission_handler: ^10.2.0
   provider: ^6.0.5
   shared_preferences: ^2.2.0
@@ -38,6 +39,7 @@ flutter:
   assets:
     - assets/images/backgrounds/
     - assets/images/icons/
+    - assets/images/profile/default_profile.png
 
 flutter_launcher_icons:
   android: true

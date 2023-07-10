@@ -1,8 +1,7 @@
-//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/features/models/app_user.dart';
-import 'package:report_it_ips/src/utils/custom_widgets/custom_widgets.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key, this.user});
@@ -15,6 +14,10 @@ class MainFeedPage extends StatefulWidget {
 class _MainFeedPageState extends State<MainFeedPage> {
   bool processing = false;
   AppUser? user;
+  int currentIndex = 0;
+
+  //pages
+  List<Widget>? _pages;
 
   @override
   void initState() {
@@ -23,45 +26,64 @@ class _MainFeedPageState extends State<MainFeedPage> {
     } else {
       user = AppUser();
     }
+    _pages = [
+      const HomePage(),
+      const MapPage(),
+      const CalendarPage(),
+      const ProfilePage(),
+    ];
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    String title = switch (currentIndex) {
+      1 => L.of(context)!.map,
+      2 => L.of(context)!.calendar,
+      3 => L.of(context)!.profile,
+      _ => ""
+    };
     return Scaffold(
-        bottomNavigationBar: CustomBottomNavigationBar(),
-        body: SafeArea(
-            child: processing
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text("Main Feed Page",
-                              style: TextStyle(fontSize: 20)),
-                          const SizedBox(height: 20),
-                          ElevatedButton(
-                            child: const Text("Sign Out"),
-                            onPressed: () => {
-                              FirebaseAuth.instance.signOut(),
-                            },
-                          ),
-                          // ! Uncomment this to test the fetch
-                          /* ElevatedButton(
-                              child: Text("Fetch"),
+        resizeToAvoidBottomInset: false,
+        bottomNavigationBar: CustomBottomNavigationBar(
+          currentIndex: 0,
+          onTap: (value) => {
+            setState(() {
+              currentIndex = value;
+            }),
+          },
+        ),
+        appBar: currentIndex != 0
+            ? AppBar(
+                titleSpacing: 20,
+                title: Text(title,
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w500)),
+                backgroundColor: Theme.of(context).primaryColor,
+                actions: [
+                  currentIndex == 3
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5),
+                          child: IconButton(
                               onPressed: () => {
-                                    FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .get()
-                                        .then((value) => {
-                                              print(AppUser.fromSnapshot(value.data()))
-                                            })
-                                  }), */
-                        ]),
-                  )));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SettingsPage()))
+                                  },
+                              icon: Icon(
+                                Icons.settings_outlined,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                weight: 300,
+                              )))
+                      : Container()
+                ],
+              )
+            : null,
+        body: SafeArea(child: _pages![currentIndex]));
   }
 }

@@ -72,5 +72,8 @@
     "calendar": "Calendário",
     "send_email": "Enviar email",
     "recover_email_sent": "Foi enviado um email para o endereço indicado com as instruções para recuperar a sua palavra-passe",
-    "email_not_registered": "O email introduzido não está associado a nenhuma conta"
+    "email_not_registered": "O email introduzido não está associado a nenhuma conta",
+    "sign_out": "Terminar sessão",
+    "add_bio": "Adicionar bio",
+    "number_of_reports": "Número de reportes"
 }

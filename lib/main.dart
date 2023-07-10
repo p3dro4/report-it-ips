@@ -52,7 +52,8 @@ class _MainAppState extends State<MainApp> {
               else
                 {
                   _navigatorKey.currentState?.pushReplacement(
-                    MaterialPageRoute(builder: (_) => const PersonalInformationPage()),
+                    MaterialPageRoute(
+                        builder: (_) => const PersonalInformationPage()),
                   )
                 }
             });
@@ -72,9 +73,11 @@ class _MainAppState extends State<MainApp> {
           backgroundColor: Colors.white,
         ).copyWith(
           onBackground: Colors.black,
+          onPrimary: Colors.white,
         ),
         primaryColor: const Color(0xFF948A85),
         primaryColorLight: const Color(0xFFcfcac8),
+        primaryColorDark: const Color(0xFF6F6865),
         brightness: Brightness.light,
         fontFamily: "Roboto",
         textTheme: TextTheme(
