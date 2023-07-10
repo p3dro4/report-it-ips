@@ -11,6 +11,7 @@ class CustomDropdownButton extends StatefulWidget {
       this.onSaved,
       this.validator,
       this.onChanged,
+      this.value,
       required this.items});
   final Map<String, String> items;
   final String label;
@@ -20,12 +21,14 @@ class CustomDropdownButton extends StatefulWidget {
   final FormFieldValidator? validator;
   final IconData? prefixIcon;
   final ValueChanged<String>? onChanged;
+  final String? value;
 
   @override
   State<CustomDropdownButton> createState() => _CustomDropdownButtonState();
 }
 
 class _CustomDropdownButtonState extends State<CustomDropdownButton> {
+  Map<String, String> get items => widget.items;
   String? dropdownValue;
 
   InputDecoration _inputFieldDecorations(
@@ -73,7 +76,7 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
       ),
       menuMaxHeight: 300,
       isExpanded: true,
-      items: widget.items.entries
+      items: items.entries
           .map((e) => DropdownMenuItem(
                 value: e.key,
                 child: AutoSizeText(
@@ -85,9 +88,10 @@ class _CustomDropdownButtonState extends State<CustomDropdownButton> {
                 ),
               ))
           .toList(),
+      value: widget.value,
       onChanged: (value) => setState(() => {
-            dropdownValue = value,
             if (widget.onChanged != null) widget.onChanged!(value ?? ""),
+            dropdownValue = value
           }),
       validator: widget.validator,
       onSaved: widget.onSaved,

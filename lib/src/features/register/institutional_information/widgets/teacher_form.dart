@@ -17,6 +17,7 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
   School? _school;
   String? _department;
   AppUser? user;
+  Map<String, String> _departments = {};
 
   @override
   void initState() {
@@ -55,6 +56,26 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
                 onChanged: (value) => {
                   setState(() {
                     _school = School.values.firstWhere((e) => e.name == value);
+                    _department = null;
+                    _departments = switch (_school) {
+                      School.ests => {
+                          for (var e in ESTSDepartments.values)
+                            e.name: e.fullName
+                        },
+                      School.ese => {
+                          for (var e in ESEDepartments.values)
+                            e.name: e.fullName
+                        },
+                      School.ess => {
+                          for (var e in ESSDepartments.values)
+                            e.name: e.fullName
+                        },
+                      School.esce => {
+                          for (var e in ESCEDepartments.values)
+                            e.name: e.fullName
+                        },
+                      _ => {},
+                    };
                   })
                 },
                 onSaved: (value) => {
@@ -69,21 +90,7 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
               ),
               const SizedBox(height: 40),
               CustomDropdownButton(
-                items: switch (_school) {
-                  School.ests => {
-                      for (var e in ESTSDepartments.values) e.name: e.fullName
-                    },
-                  School.ese => {
-                      for (var e in ESEDepartments.values) e.name: e.fullName
-                    },
-                  School.ess => {
-                      for (var e in ESSDepartments.values) e.name: e.fullName
-                    },
-                  School.esce => {
-                      for (var e in ESCEDepartments.values) e.name: e.fullName
-                    },
-                  _ => {},
-                },
+                items: _departments,
                 label: L.of(context)!.department,
                 prefixIcon: Icons.corporate_fare,
                 color: Theme.of(context).colorScheme.primary,
@@ -93,6 +100,12 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
                     return L.of(context)!.department_required;
                   }
                   return null;
+                },
+                value: _department,
+                onChanged: (value) => {
+                  setState(() {
+                    _department = value;
+                  })
                 },
                 onSaved: (value) => {
                   _department = value,

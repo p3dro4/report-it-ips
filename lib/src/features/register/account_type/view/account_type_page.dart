@@ -123,6 +123,11 @@ class _AccountTypePageState extends State<AccountTypePage> {
                       )
                     ]),
               ),
+        CustomBackButton(
+          text: L.of(context)!.back,
+          callback: () => Navigator.of(context).pop(),
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ],
     )));
   }

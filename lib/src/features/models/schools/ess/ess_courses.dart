@@ -42,7 +42,7 @@ extension ESSCoursesExtension on ESSCourses {
       ESSCourses.mee => "Mestrado em Estudos em Enfermagem",
       ESSCourses.mfcme =>
         "Mestrado em Fisioterapia em Condições Músculo-Esqueléticas",
-      ESSCourses.mghsbe => "Gestão em Hotelaria de Saúde e Bem-Estar",
+      ESSCourses.mghsbe => "Mestrado Gestão em Hotelaria de Saúde e Bem-Estar",
       ESSCourses.mpafn =>
         "Mestrado em Práticas Avançadas de Fisioterapia em Neurologia",
       ESSCourses.mtf => "Mestrado em Terapia da Fala",

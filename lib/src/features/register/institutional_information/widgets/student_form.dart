@@ -18,6 +18,7 @@ class _StudentFormPageState extends State<StudentFormPage> {
   String? _course;
   String? _schoolYear;
   AppUser? user;
+  Map<String, String> _courses = {};
 
   @override
   void initState() {
@@ -57,6 +58,22 @@ class _StudentFormPageState extends State<StudentFormPage> {
                 onChanged: (value) => {
                   setState(() {
                     _school = School.values.firstWhere((e) => e.name == value);
+                    _course = null;
+                    _courses = switch (_school) {
+                      School.ests => {
+                          for (var e in ESTSCourses.values) e.name: e.fullName
+                        },
+                      School.ese => {
+                          for (var e in ESECourses.values) e.name: e.fullName
+                        },
+                      School.ess => {
+                          for (var e in ESSCourses.values) e.name: e.fullName
+                        },
+                      School.esce => {
+                          for (var e in ESCECourses.values) e.name: e.fullName
+                        },
+                      _ => {}
+                    };
                   })
                 },
                 onSaved: (value) => {
@@ -71,21 +88,7 @@ class _StudentFormPageState extends State<StudentFormPage> {
               ),
               const SizedBox(height: 40),
               CustomDropdownButton(
-                items: switch (_school) {
-                  School.ests => {
-                      for (var e in ESTSCourses.values) e.name: e.fullName
-                    },
-                  School.ese => {
-                      for (var e in ESECourses.values) e.name: e.fullName
-                    },
-                  School.ess => {
-                      for (var e in ESSCourses.values) e.name: e.fullName
-                    },
-                  School.esce => {
-                      for (var e in ESCECourses.values) e.name: e.fullName
-                    },
-                  _ => {},
-                },
+                items: _courses,
                 label: L.of(context)!.course,
                 prefixIcon: Icons.school_outlined,
                 color: Theme.of(context).colorScheme.primary,
@@ -95,6 +98,12 @@ class _StudentFormPageState extends State<StudentFormPage> {
                     return L.of(context)!.course_required;
                   }
                   return null;
+                },
+                value: _course,
+                onChanged: (value) => {
+                  setState(() {
+                    _course = value;
+                  })
                 },
                 onSaved: (value) => {
                   _course = value,

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/features/models/app_user.dart';
@@ -46,18 +45,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
                               FirebaseAuth.instance.signOut(),
                             },
                           ),
-                          ElevatedButton(
-                              onPressed: () => {
-                                    FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(FirebaseAuth
-                                            .instance.currentUser!.uid)
-                                        .get()
-                                        .then((value) => {
-                                              print(AppUser.fromSnapshot(value.data()).toString()),
-                                            }),
-                                  },
-                              child: const Text("Fetch Data"))
+                          
                         ]),
                   )));
   }

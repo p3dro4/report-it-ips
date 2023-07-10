@@ -62,5 +62,7 @@
     "cleaning": "Limpeza",
     "security": "Segurança",
     "cook": "Cozinha",
-    "external_position": "Externo"
+    "external_position": "Externo",
+    "recover_password": "Recuperar palavra-passe",
+    "insert_email": "Insira o email associado à sua conta"
 }

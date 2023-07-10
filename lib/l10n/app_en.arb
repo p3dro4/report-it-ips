@@ -227,5 +227,13 @@
     "cleaning": "Cleaning",
     "security": "Security",
     "cook": "Cook",
-    "external_position": "External"
+    "external_position": "External",
+    "recover_password": "Recover password",
+    "@recover_password": {
+        "description": "Recover password text"
+    },
+    "insert_email": "Insert your email",
+    "@insert_email": {
+        "description": "Insert email text"
+    }
 }

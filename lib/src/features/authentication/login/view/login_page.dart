@@ -206,7 +206,15 @@ class _LoginPageState extends State<LoginPage> {
                                         Align(
                                             alignment: Alignment.centerLeft,
                                             child: TextButton(
-                                                onPressed: () => {},
+                                                onPressed: () => {
+                                                      Navigator.of(context)
+                                                          .push(
+                                                        MaterialPageRoute(
+                                                          builder: (_) =>
+                                                              const RecoverPasswordPage(),
+                                                        ),
+                                                      ),
+                                                    },
                                                 style: const ButtonStyle(
                                                   padding:
                                                       MaterialStatePropertyAll(

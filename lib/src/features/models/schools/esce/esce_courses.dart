@@ -49,8 +49,7 @@ extension ESCECoursesExtension on ESCECourses {
       ESCECourses.mcf => "Mestrado em Contabilidade e Finanças",
       ESCECourses.mgae => "Mestrado em Gestão e Administração de Escolas",
       ESCECourses.mgerh => "Mestrado em Gestão Estratégica de Recursos Humanos",
-      ESCECourses.mghsbe =>
-        "Mestrado em Gestão em Hotelaria de Saúde e Bem-Estar",
+      ESCECourses.mghsbe =>"Mestrado em Gestão em Hotelaria de Saúde e Bem-Estar",
       ESCECourses.mgm => "Mestrado em Gestão de Marketing",
       ESCECourses.msi => "Mestrado em Gestão de Sistemas de Informação",
       ESCECourses.mlgca =>
