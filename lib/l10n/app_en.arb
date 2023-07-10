@@ -235,5 +235,37 @@
     "insert_email": "Insert your email",
     "@insert_email": {
         "description": "Insert email text"
+    },
+    "home": "Home",
+    "@home": {
+        "description": "Home text"
+    },
+    "profile": "Profile",
+    "@profile": {
+        "description": "Profile text"
+    },
+    "map": "Map",
+    "@map": {
+        "description": "Map text"
+    },
+    "settings": "Settings",
+    "@settings": {
+        "description": "Settings text"
+    },
+    "calendar": "Calendar",
+    "@calendar": {
+        "description": "Calendar text"
+    },
+    "send_email": "Send email",
+    "@send_email": {
+        "description": "Send email text"
+    },
+    "recover_email_sent": "An email was sent to your email address with instructions to recover your password",
+    "@email_sent": {
+        "description": "Email sent text"
+    },
+    "email_not_registered": "The provided email is not registered",
+    "@email_not_registered": {
+        "description": "Email not registered text"
     }
 }

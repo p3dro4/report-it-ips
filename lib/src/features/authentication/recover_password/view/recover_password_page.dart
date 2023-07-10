@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,14 +11,53 @@ class RecoverPasswordPage extends StatefulWidget {
 }
 
 class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _submitting = false;
-  bool _keyboardIsVisible = false;
+  String? _email;
+
+  Future<void> _submit() async {
+    setState(() {
+      _submitting = true;
+    });
+    _formKey.currentState!.save();
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      setState(() {
+        _submitting = false;
+      });
+      showSnackbar(
+        context: context,
+        message: L.of(context)!.correct_errors,
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+      return;
+    }
+
+    FirebaseAuth.instance
+        .sendPasswordResetEmail(email: _email!)
+        .then((value) => {
+              showSnackbar(
+                context: context,
+                message: L.of(context)!.recover_email_sent,
+                backgroundColor: Colors.green,
+              ),
+              Navigator.of(context).pop(),
+            })
+        .then((value) => {
+              setState(() {
+                _submitting = false;
+              })
+            })
+        .catchError((error) => {
+              showSnackbar(
+                context: context,
+                message: L.of(context)!.email_not_registered,
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            });
+  }
 
   @override
   Widget build(BuildContext context) {
-    MediaQuery.of(context).viewInsets.bottom == 0
-        ? _keyboardIsVisible = false
-        : _keyboardIsVisible = true;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -32,21 +72,51 @@ class _RecoverPasswordPageState extends State<RecoverPasswordPage> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SizedBox(
-                              height: _keyboardIsVisible
-                                  ? MediaQuery.of(context).size.height * 0.05
-                                  : MediaQuery.of(context).size.height * 0.15),
+                              height:
+                                  MediaQuery.of(context).size.height * 0.15),
                           Text(
-                            L.of(context)!.conclude_registration,
-                            style: Theme.of(context).textTheme.displayLarge,
+                            L.of(context)!.recover_password,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayLarge!
+                                .copyWith(fontSize: 30),
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            L.of(context)!.fill_in_your_personal_details,
+                            L.of(context)!.insert_email,
                             style: Theme.of(context).textTheme.displaySmall,
                           ),
                           SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.05),
+                          Form(
+                              key: _formKey,
+                              child: CustomFormInputField(
+                                prefixIcon: Icons.email_outlined,
+                                labelText: L.of(context)!.email,
+                                keyboardType: TextInputType.emailAddress,
+                                color: Theme.of(context).colorScheme.primary,
+                                errorColor: Theme.of(context).colorScheme.error,
+                                onSaved: (value) => {_email = value},
+                                validator: (value) {
+                                  if (value?.isEmpty ?? true) {
+                                    return L.of(context)!.email_required;
+                                  }
+                                  if (!RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(value!)) {
+                                    return L.of(context)!.email_invalid;
+                                  }
+                                  return null;
+                                },
+                              )),
+                          const SizedBox(height: 40),
+                          CustomSubmitButton(
+                              text: L.of(context)!.send_email,
+                              callback: _submit,
+                              color: Theme.of(context).colorScheme.primary,
+                              textColor:
+                                  Theme.of(context).colorScheme.onPrimary),
                         ])),
             CustomBackButton(
               text: L.of(context)!.back,

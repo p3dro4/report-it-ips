@@ -64,5 +64,13 @@
     "cook": "Cozinha",
     "external_position": "Externo",
     "recover_password": "Recuperar palavra-passe",
-    "insert_email": "Insira o email associado à sua conta"
+    "insert_email": "Insira o email associado à sua conta",
+    "home": "Início",
+    "profile": "Perfil",
+    "map": "Mapa",
+    "settings": "Definições",
+    "calendar": "Calendário",
+    "send_email": "Enviar email",
+    "recover_email_sent": "Foi enviado um email para o endereço indicado com as instruções para recuperar a sua palavra-passe",
+    "email_not_registered": "O email introduzido não está associado a nenhuma conta"
 }

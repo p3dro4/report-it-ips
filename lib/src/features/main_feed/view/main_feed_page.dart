@@ -1,6 +1,8 @@
+//import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/features/models/app_user.dart';
+import 'package:report_it_ips/src/utils/custom_widgets/custom_widgets.dart';
 
 class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key, this.user});
@@ -27,6 +29,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: CustomBottomNavigationBar(),
         body: SafeArea(
             child: processing
                 ? const Center(
@@ -45,7 +48,19 @@ class _MainFeedPageState extends State<MainFeedPage> {
                               FirebaseAuth.instance.signOut(),
                             },
                           ),
-                          
+                          // ! Uncomment this to test the fetch
+                          /* ElevatedButton(
+                              child: Text("Fetch"),
+                              onPressed: () => {
+                                    FirebaseFirestore.instance
+                                        .collection("users")
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser!.uid)
+                                        .get()
+                                        .then((value) => {
+                                              print(AppUser.fromSnapshot(value.data()))
+                                            })
+                                  }), */
                         ]),
                   )));
   }
