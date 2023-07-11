@@ -280,5 +280,24 @@
     "@add_bio": {
         "description": "Add bio text"
     },
-    "number_of_reports": "Number of reports"
+    "number_of_reports": "Number of reports",
+    "@number_of_reports": {
+        "description": "Number of reports text"
+    },
+    "number_of_points": "Number of points",
+    "@number_of_points": {
+        "description": "Number of points text"
+    },
+    "league": "League",
+    "@league": {
+        "description": "League text"
+    },
+    "bronze": "Bronze",
+    "silver": "Silver",
+    "gold": "Gold",
+    "platinum": "Platinum",
+    "diamond": "Diamond",
+    "reporter": "Reporter",
+    "reports": "Reports",
+    "year": "Year"
 }

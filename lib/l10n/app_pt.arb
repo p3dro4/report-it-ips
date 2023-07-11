@@ -74,6 +74,17 @@
     "recover_email_sent": "Foi enviado um email para o endereço indicado com as instruções para recuperar a sua palavra-passe",
     "email_not_registered": "O email introduzido não está associado a nenhuma conta",
     "sign_out": "Terminar sessão",
+    "settings_saved": "Definições guardadas com sucesso",
     "add_bio": "Adicionar bio",
-    "number_of_reports": "Número de reportes"
+    "number_of_reports": "Número de reportes",
+    "number_of_points": "Número de pontos",
+    "league": "Liga",
+    "bronze": "Bronze",
+    "silver": "Prata",
+    "gold": "Ouro",
+    "platinum": "Platina",
+    "diamond": "Diamante",
+    "reporter": "Reportador",
+    "reports": "Reportes",
+    "year": "Ano"
 }

@@ -1,10 +1,13 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 class BannerProfile extends StatefulWidget {
-  const BannerProfile({super.key, this.label, this.icon, this.value});
+  const BannerProfile(
+      {super.key, this.label, this.icon, this.value, this.iconColor});
 
   final String? label;
   final IconData? icon;
+  final Color? iconColor;
   final String? value;
 
   @override
@@ -28,11 +31,10 @@ class _BannerProfileState extends State<BannerProfile> {
               children: [
                 Icon(
                   widget.icon,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: widget.iconColor ??
+                      Theme.of(context).colorScheme.onPrimary,
+                  shadows: const [Shadow(color: Colors.black, blurRadius: 3)],
                   size: 40,
-                ),
-                const SizedBox(
-                  height: 10,
                 ),
                 Text(
                   widget.value ?? '',
@@ -41,11 +43,13 @@ class _BannerProfileState extends State<BannerProfile> {
                       fontSize: 20,
                       fontWeight: FontWeight.w500),
                 ),
-                Text(
+                AutoSizeText(
                   widget.label ?? '',
+                  maxLines: 1,
+                  maxFontSize: 10,
+                  minFontSize: 5,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.onPrimary,
-                      fontSize: 15,
                       fontWeight: FontWeight.w500),
                 ),
               ],

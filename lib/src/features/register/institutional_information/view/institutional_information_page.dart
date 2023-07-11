@@ -40,7 +40,7 @@ class _InstitutionalInformationPageState
         .set(user.toJson(), SetOptions(merge: true));
     List<String> splitName = user.name!.split(' ');
     FirebaseAuth.instance.currentUser!.updateDisplayName(
-        "${splitName[0]} ${splitName[splitName.length - 1]}");
+        "${splitName[0]} ${splitName.length > 1 ? splitName[splitName.length - 1] : ""}");
     setState(() {
       _submitting = false;
     });

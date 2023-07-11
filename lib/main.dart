@@ -74,6 +74,7 @@ class _MainAppState extends State<MainApp> {
         ).copyWith(
           onBackground: Colors.black,
           onPrimary: Colors.white,
+          brightness: Brightness.light,
         ),
         primaryColor: const Color(0xFF948A85),
         primaryColorLight: const Color(0xFFcfcac8),
