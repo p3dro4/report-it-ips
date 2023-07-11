@@ -1,17 +1,19 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/profile/models/models.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/profile/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.user});
+  const ProfilePage({super.key, required this.user, required this.profile});
 
   final AppUser user;
-  static AppBar appBar(BuildContext context) {
+  final AppProfile profile;
+
+  static AppBar appBar(BuildContext context, AppProfile? profile) {
     return AppBar(
       titleSpacing: 20,
       title: Text(L.of(context)!.profile,
@@ -28,7 +30,9 @@ class ProfilePage extends StatefulWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SettingsPage()))
+                              builder: (context) => SettingsPage(
+                                    profile: profile,
+                                  )))
                     },
                 icon: Icon(
                   Icons.settings_outlined,
@@ -47,37 +51,6 @@ class _ProfilePageState extends State<ProfilePage> {
   AppProfile? profile;
   AppUser? user;
 
-  Future<void> _createProfile() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    AppProfile profile = AppProfile(
-      displayName: FirebaseAuth.instance.currentUser!.displayName!,
-      photoURL: FirebaseAuth.instance.currentUser!.photoURL,
-    );
-    await FirebaseFirestore.instance
-        .collection("profiles")
-        .doc(uid)
-        .set(profile.toJson())
-        .then((value) => {
-              setState(() {
-                this.profile = profile;
-              })
-            });
-  }
-
-  Future<void> _getProfile() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance
-        .collection("profiles")
-        .doc(uid)
-        .get(const GetOptions(source: Source.serverAndCache))
-        .then((value) => {
-              setState(() {
-                profile = AppProfile.fromSnapshot(value.data()!);
-              })
-            })
-        .onError((error, stackTrace) => {_createProfile()});
-  }
-
   String _getSubText() {
     return switch (user!.userType) {
       AccountTypes.student =>
@@ -88,8 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    _getProfile();
     user = widget.user;
+    profile = widget.profile;
     super.initState();
   }
 

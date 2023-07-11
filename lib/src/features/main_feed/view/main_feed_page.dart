@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/profile/models/profile.dart';
+import 'package:report_it_ips/src/features/models/app_profile.dart';
 import 'package:report_it_ips/src/features/models/app_user.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 
@@ -16,6 +18,7 @@ class MainFeedPage extends StatefulWidget {
 class _MainFeedPageState extends State<MainFeedPage> {
   bool processing = false;
   AppUser? user;
+  AppProfile? profile;
   int currentIndex = 0;
 
   Future<void> _getUser() async {
@@ -48,6 +51,11 @@ class _MainFeedPageState extends State<MainFeedPage> {
         processing = false;
       });
     }
+    ProfileHandler.getProfile().then((value) => {
+          setState(() {
+            profile = value;
+          })
+        });
     super.initState();
   }
 
@@ -68,7 +76,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
         appBar: switch (currentIndex) {
           1 => MapPage.appBar(context),
           2 => CalendarPage.appBar(context),
-          3 => ProfilePage.appBar(context),
+          3 => ProfilePage.appBar(context, profile!),
           _ => null,
         },
         body: SafeArea(
@@ -82,6 +90,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
                   2 => const CalendarPage(),
                   3 => ProfilePage(
                       user: user!,
+                      profile: profile!,
                     ),
                   _ => const HomePage(),
                 },
