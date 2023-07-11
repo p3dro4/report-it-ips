@@ -299,5 +299,7 @@
     "diamond": "Diamond",
     "reporter": "Reporter",
     "reports": "Reports",
-    "year": "Year"
+    "year": "Year",
+    "bio": "Bio",
+    "bio_text": "Tell us a little bit about yourself"
 }

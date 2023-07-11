@@ -3,8 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 
 class ProfileHandler {
-  static Future<AppProfile> createProfile() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
+  static Future<AppProfile> createProfile(String uid) async {
     AppProfile profile = AppProfile(
       displayName: FirebaseAuth.instance.currentUser!.displayName!,
       photoURL: FirebaseAuth.instance.currentUser!.photoURL,
@@ -16,8 +15,7 @@ class ProfileHandler {
     return profile;
   }
 
-  static Future<AppProfile> getProfile() async {
-    String uid = FirebaseAuth.instance.currentUser!.uid;
+  static Future<AppProfile> getProfile(String uid) async {
     AppProfile profile = AppProfile();
     await FirebaseFirestore.instance
         .collection("profiles")
@@ -25,5 +23,12 @@ class ProfileHandler {
         .get(const GetOptions(source: Source.serverAndCache))
         .then((value) => {profile = AppProfile.fromSnapshot(value.data()!)});
     return profile;
+  }
+
+  static updateProfile(AppProfile appProfile, String uid) async {
+    await FirebaseFirestore.instance
+        .collection("profiles")
+        .doc(uid)
+        .set(appProfile.toJson(), SetOptions(merge: true));
   }
 }

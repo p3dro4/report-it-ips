@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/profile/models/models.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/profile/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
@@ -13,41 +12,11 @@ class ProfilePage extends StatefulWidget {
   final AppUser user;
   final AppProfile profile;
 
-  static AppBar appBar(BuildContext context, AppProfile? profile) {
-    return AppBar(
-      titleSpacing: 20,
-      title: Text(L.of(context)!.profile,
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.onPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w500)),
-      backgroundColor: Theme.of(context).primaryColor,
-      actions: [
-        Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: IconButton(
-                onPressed: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SettingsPage(
-                                    profile: profile,
-                                  )))
-                    },
-                icon: Icon(
-                  Icons.settings_outlined,
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  weight: 300,
-                )))
-      ],
-    );
-  }
-
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfilePage> createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class ProfilePageState extends State<ProfilePage> {
   AppProfile? profile;
   AppUser? user;
 
@@ -135,7 +104,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     height: 15,
                   ),
                   AutoSizeText(
-                    FirebaseAuth.instance.currentUser!.displayName!,
+                    profile?.displayName ?? "",
                     maxLines: 1,
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
@@ -160,23 +129,40 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(
                     height: 5,
                   ),
-                  TextButton(
-                      onPressed: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingsPage())),
-                          },
-                      child: Text("+ ${L.of(context)!.add_bio.toUpperCase()}",
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
+                  profile!.bio != null && profile!.bio!.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(profile!.bio!,
+                              style: TextStyle(
+                                color: Theme.of(context).brightness ==
+                                        Brightness.dark
                                     ? Colors.white
                                     : Colors.black,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ))),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              )))
+                      : TextButton(
+                          onPressed: () async {
+                            bool refresh = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SettingsPage(
+                                          profile: profile,
+                                        )));
+                            if (refresh) {
+                              setState(() {});
+                            }
+                          },
+                          child:
+                              Text("+ ${L.of(context)!.add_bio.toUpperCase()}",
+                                  style: TextStyle(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                  ))),
                   const SizedBox(
                     height: 20,
                   ),

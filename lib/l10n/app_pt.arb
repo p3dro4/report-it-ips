@@ -86,5 +86,7 @@
     "diamond": "Diamante",
     "reporter": "Reportador",
     "reports": "Reportes",
-    "year": "Ano"
+    "year": "Ano",
+    "bio": "Bio",
+    "bio_text": "Diga algo sobre si para o mundo ver"
 }
