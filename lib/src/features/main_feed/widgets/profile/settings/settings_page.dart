@@ -54,6 +54,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
+  // TODO Add functionality to view leaderboard
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,6 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                         "assets/images/profile/default_profile.png",
                                         fit: BoxFit.cover,
                                       ))),
+                        // TODO Add functionality to edit profile picture
                         Positioned(
                             bottom: 0,
                             right: 0,

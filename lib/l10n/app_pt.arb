@@ -88,5 +88,17 @@
     "reports": "Reportes",
     "year": "Ano",
     "bio": "Bio",
-    "bio_text": "Diga algo sobre si para o mundo ver"
+    "bio_text": "Diga algo sobre si para o mundo ver",
+    "search": "Pesquisar",
+    "all": "Todos",
+    "priority": "Prioridade",
+    "warning": "Aviso",
+    "info": "Informação",
+    "recent_reports": "Reportes recentes",
+    "create_report": "Criar reporte",
+    "select_report_type": "Selecione o tipo de reporte",
+    "title": "Título",
+    "title_required": "O campo título é obrigatório",
+    "fill_in_report_details": "Preencha os detalhes do reporte",
+    "resolved": "Resolvido"
 }

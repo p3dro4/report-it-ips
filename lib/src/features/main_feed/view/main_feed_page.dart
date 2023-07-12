@@ -72,6 +72,27 @@ class _MainFeedPageState extends State<MainFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      floatingActionButton: currentIndex == 0
+          ? Padding(
+              padding: const EdgeInsets.all(10),
+              child: SizedBox(
+                  width: 70,
+                  height: 70,
+                  child: FloatingActionButton(
+                    shape: const CircleBorder(),
+                    child: const Icon(Icons.add_rounded, size: 50),
+                    onPressed: () async {
+                      bool? refresh = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SelectReportTypePage()));
+                      if (refresh ?? false) {
+                        setState(() {});
+                      }
+                    },
+                  )))
+          : null,
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: 0,
         onTap: processing

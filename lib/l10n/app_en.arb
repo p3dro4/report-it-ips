@@ -301,5 +301,17 @@
     "reports": "Reports",
     "year": "Year",
     "bio": "Bio",
-    "bio_text": "Tell us a little bit about yourself"
+    "bio_text": "Tell us a little bit about yourself",
+    "search": "Search",
+    "all": "All",
+    "priority": "Priority",
+    "warning": "Warning",
+    "info": "Info",
+    "recent_reports": "Recent reports",
+    "create_report": "Create report",
+    "select_report_type": "Select report type",
+    "title": "Title",
+    "title_required": "Please provide a title",
+    "fill_in_report_details": "Fill in report details",
+    "resolved": "Resolved"
 }
