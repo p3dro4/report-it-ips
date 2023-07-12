@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/reports/reports.dart';
 import 'package:report_it_ips/src/utils/background_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-//TODO: Implement HomePage
+// TODO Fix bug where there are duplicate reports\
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -15,15 +16,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _processing = false;
-  int _currentFilterIndex = 0;
+  ReportType? _currentFilter;
   int _currentHighlight = 0;
+  String _searchText = "";
   late List<HighlightsBanner> _highlights;
-  late List<Report> _reports;
+  late Map<String, Report> _reports;
+  late Map<DateTime, Map<String, Report>> _reportsByDate;
 
   Future<void> _initBanner() async {
-    setState(() {
-      _processing = true;
-    });
     _highlights = [];
     await FirebaseFirestore.instance
         .collection("highlights")
@@ -38,16 +38,10 @@ class _HomePageState extends State<HomePage> {
                 }
               })
             });
-    setState(() {
-      _processing = false;
-    });
   }
 
   Future<void> _loadReports() async {
-    setState(() {
-      _processing = true;
-    });
-    _reports = [];
+    _reports = {};
     await FirebaseFirestore.instance
         .collection("reports")
         .orderBy("timestamp", descending: true)
@@ -55,27 +49,49 @@ class _HomePageState extends State<HomePage> {
         .then((value) => {
               value.docs.forEach((element) {
                 setState(() {
-                  _reports.add(Report.fromSnapshot(element.data()));
+                  _reports[element.id] = Report.fromSnapshot(element.data());
                 });
               })
             });
-    setState(() {
-      _processing = false;
+    //print("Date: ${DateFormat("dd-MM-yyyy").format(DateTime.now())}");
+  }
+
+  Future<void> _organizeByDate() async {
+    _reportsByDate = {};
+    _reports.forEach((key, value) {
+      DateTime dateTime = DateFormat("dd-MM-yyyy").parse(
+          DateFormat("dd-MM-yyyy").format(value.timestamp ?? DateTime.now()));
+      if (_reportsByDate.containsKey(dateTime)) {
+        _reportsByDate[dateTime]!.addAll({key: value});
+      } else {
+        _reportsByDate.addAll({
+          dateTime: {key: value}
+        });
+      }
     });
   }
 
   Future<void> _onRefresh() async {
     setState(() {
-      _currentFilterIndex = 0;
+      _processing = true;
     });
     await _initBanner();
-    await _loadReports();
+    await _loadReports().then((value) => {
+          _organizeByDate().then((value) => {
+                setState(() {
+                  _processing = false;
+                })
+              })
+        });
   }
 
   @override
   void initState() {
+    _processing = true;
     _initBanner();
-    _loadReports();
+    _loadReports().then((value) => {
+          _organizeByDate().then((value) => {_processing = false})
+        });
     super.initState();
   }
 
@@ -97,6 +113,11 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                         height: MediaQuery.of(context).size.height * 0.025),
                     SearchBar(
+                      onChanged: (value) {
+                        setState(() {
+                          _searchText = value;
+                        });
+                      },
                       leading: const Icon(Icons.search),
                       hintText: L.of(context)!.search,
                       side: MaterialStatePropertyAll<BorderSide>(BorderSide(
@@ -118,14 +139,14 @@ class _HomePageState extends State<HomePage> {
                         CustomFilterButton(
                           onPressed: () {
                             setState(() {
-                              _currentFilterIndex = 0;
+                              _currentFilter = null;
                             });
                           },
                           text: L.of(context)!.all,
-                          color: _currentFilterIndex == 0
+                          color: _currentFilter == null
                               ? Colors.white
                               : Colors.grey.shade400,
-                          textColor: _currentFilterIndex == 0
+                          textColor: _currentFilter == null
                               ? Colors.black
                               : Colors.grey.shade700,
                         ),
@@ -133,28 +154,28 @@ class _HomePageState extends State<HomePage> {
                         CustomFilterButton(
                             onPressed: () {
                               setState(() {
-                                _currentFilterIndex = 1;
+                                _currentFilter = ReportType.priority;
                               });
                             },
                             text: L.of(context)!.priority,
-                            color: _currentFilterIndex == 1
+                            color: _currentFilter == ReportType.priority
                                 ? Colors.white
                                 : Colors.grey.shade400,
-                            textColor: _currentFilterIndex == 1
+                            textColor: _currentFilter == ReportType.priority
                                 ? Colors.black
                                 : Colors.grey.shade700),
                         const SizedBox(width: 10),
                         CustomFilterButton(
                           onPressed: () {
                             setState(() {
-                              _currentFilterIndex = 2;
+                              _currentFilter = ReportType.warning;
                             });
                           },
                           text: L.of(context)!.warning,
-                          color: _currentFilterIndex == 2
+                          color: _currentFilter == ReportType.warning
                               ? Colors.white
                               : Colors.grey.shade400,
-                          textColor: _currentFilterIndex == 2
+                          textColor: _currentFilter == ReportType.warning
                               ? Colors.black
                               : Colors.grey.shade700,
                         ),
@@ -162,14 +183,14 @@ class _HomePageState extends State<HomePage> {
                         CustomFilterButton(
                           onPressed: () {
                             setState(() {
-                              _currentFilterIndex = 3;
+                              _currentFilter = ReportType.info;
                             });
                           },
                           text: L.of(context)!.info,
-                          color: _currentFilterIndex == 3
+                          color: _currentFilter == ReportType.info
                               ? Colors.white
                               : Colors.grey.shade400,
-                          textColor: _currentFilterIndex == 3
+                          textColor: _currentFilter == ReportType.info
                               ? Colors.black
                               : Colors.grey.shade700,
                         ),
@@ -183,75 +204,74 @@ class _HomePageState extends State<HomePage> {
                             triggerMode: RefreshIndicatorTriggerMode.onEdge,
                             onRefresh: _onRefresh,
                             child: ListView.builder(
-                              itemCount: _reports.length + 1,
+                              itemCount: _reportsByDate.length + 1,
                               itemBuilder: (context, index) {
                                 if (index == 0) {
                                   return Column(
                                     children: [
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.20,
-                                        child: GestureDetector(
-                                          child: _highlights.isNotEmpty
-                                              ? Column(children: [
-                                                  _highlights[
-                                                      _currentHighlight],
-                                                  if (_highlights.length > 1)
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: _highlights
-                                                          .map((e) => Container(
-                                                                margin: const EdgeInsets
-                                                                        .symmetric(
-                                                                    horizontal:
-                                                                        10),
-                                                                width: 50,
-                                                                height: 5,
-                                                                decoration:
-                                                                    BoxDecoration(
-                                                                  color: _highlights.indexOf(
-                                                                              e) ==
-                                                                          _currentHighlight
-                                                                      ? Colors
-                                                                          .grey
-                                                                      : Colors
-                                                                          .grey
-                                                                          .shade400,
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                      if (_highlights.isNotEmpty)
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.20,
+                                          child: GestureDetector(
+                                            child: _highlights.isNotEmpty
+                                                ? Column(children: [
+                                                    _highlights[
+                                                        _currentHighlight],
+                                                    if (_highlights.length > 1)
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: _highlights
+                                                            .map(
+                                                                (e) =>
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .symmetric(
+                                                                          horizontal:
                                                                               10),
-                                                                ),
-                                                              ))
-                                                          .toList(),
-                                                    )
-                                                ])
-                                              : null,
-                                          onHorizontalDragStart: (details) {
-                                            details.globalPosition.dx > 0
-                                                ? _currentHighlight == 0
-                                                    ? setState(() {
-                                                        _currentHighlight =
-                                                            _highlights.length -
-                                                                1;
-                                                      })
-                                                    : setState(() {
-                                                        _currentHighlight--;
-                                                      })
-                                                : _currentHighlight ==
-                                                        _highlights.length - 1
-                                                    ? setState(() {
-                                                        _currentHighlight = 0;
-                                                      })
-                                                    : setState(() {
-                                                        _currentHighlight++;
-                                                      });
-                                          },
+                                                                      width: 50,
+                                                                      height: 5,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: _highlights.indexOf(e) ==
+                                                                                _currentHighlight
+                                                                            ? Colors.grey
+                                                                            : Colors.grey.shade400,
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(10),
+                                                                      ),
+                                                                    ))
+                                                            .toList(),
+                                                      )
+                                                  ])
+                                                : null,
+                                            onHorizontalDragStart: (details) {
+                                              details.globalPosition.dx > 0
+                                                  ? _currentHighlight == 0
+                                                      ? setState(() {
+                                                          _currentHighlight =
+                                                              _highlights
+                                                                      .length -
+                                                                  1;
+                                                        })
+                                                      : setState(() {
+                                                          _currentHighlight--;
+                                                        })
+                                                  : _currentHighlight ==
+                                                          _highlights.length - 1
+                                                      ? setState(() {
+                                                          _currentHighlight = 0;
+                                                        })
+                                                      : setState(() {
+                                                          _currentHighlight++;
+                                                        });
+                                            },
+                                          ),
                                         ),
-                                      ),
                                       Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
@@ -263,8 +283,47 @@ class _HomePageState extends State<HomePage> {
                                     ],
                                   );
                                 }
-                                return ListReportItem(
-                                    report: _reports[index - 1]);
+                                List<ListReportItem> shownReports =
+                                    _reportsByDate.values
+                                        .toList()[index - 1]
+                                        .entries
+                                        .map((e) => ListReportItem(
+                                              id: e.key,
+                                              report: e.value,
+                                            ))
+                                        .where((element) =>
+                                            (_currentFilter == null ||
+                                                element.report.type ==
+                                                    _currentFilter))
+                                        .map((e) => e)
+                                        .where((element) => element
+                                            .report.title!
+                                            .toLowerCase()
+                                            .contains(
+                                                _searchText.toLowerCase()))
+                                        .toList();
+                                return Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    if (shownReports.isNotEmpty)
+                                      Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            DateFormat("MMM dd").format(
+                                                _reportsByDate.keys
+                                                    .toList()[index - 1]),
+                                            style: TextStyle(
+                                                color: Colors.grey.shade700,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w500),
+                                          )),
+                                    Column(
+                                      children: shownReports,
+                                    )
+                                  ],
+                                );
                               },
                             ))),
                   ],

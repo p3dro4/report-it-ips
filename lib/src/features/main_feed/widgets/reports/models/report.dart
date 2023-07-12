@@ -14,6 +14,7 @@ class Report {
     this.bannerPhotoURL,
     this.upvoters,
     this.downvoters,
+    this.resolved = false,
   });
 
   String? title;
@@ -23,7 +24,7 @@ class Report {
   DateTime? timestamp;
   List<String>? tags;
   LatLng? location;
-  bool resolved = false;
+  bool resolved;
   int? upvotes;
   List<String>? upvoters = [];
   List<String>? downvoters = [];
@@ -42,8 +43,10 @@ class Report {
       upvotes: report["upvotes"] as int?,
       timestamp: (report["timestamp"] as Timestamp).toDate(),
       bannerPhotoURL: report["bannerPhotoURL"] as String?,
-      upvoters: report["upvoters"] as List<String>?,
-      downvoters: report["downvoters"] as List<String>?,
+      upvoters: List<String>.from(report["upvoters"] as List<dynamic>? ?? []),
+      downvoters:
+          List<String>.from(report["downvoters"] as List<dynamic>? ?? []),
+      resolved: report["resolved"] as bool? ?? false,
     );
   }
 

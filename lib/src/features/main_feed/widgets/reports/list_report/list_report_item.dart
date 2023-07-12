@@ -1,18 +1,24 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+//TODO: Tags
 class ListReportItem extends StatefulWidget {
   const ListReportItem(
-      {super.key, required this.report, this.color, this.onTap});
+      {super.key,
+      required this.report,
+      this.color,
+      this.onTap,
+      required this.id});
 
   final Color? color;
   final Function()? onTap;
-
+  final String id;
   final Report report;
 
   @override
@@ -24,7 +30,6 @@ class _ListReportItemState extends State<ListReportItem> {
   bool downvoted = false;
   late Report report;
   late int upvotes;
-  
 
   @override
   void initState() {
@@ -41,6 +46,34 @@ class _ListReportItemState extends State<ListReportItem> {
     });
     upvotes = report.upvotes ?? 0;
     super.initState();
+  }
+
+  Future<void> _updateOnFirebase() async {
+    final doc = await FirebaseFirestore.instance
+        .collection("reports")
+        .doc(widget.id)
+        .get();
+    int upvotes = doc.data()!["upvotes"] as int? ?? 0;
+    List<String> upvoters = List<String>.from(doc.data()!["upvoters"]);
+    List<String> downvoters = List<String>.from(doc.data()!["downvoters"]);
+
+    if (upvoted) {
+      upvoters.add(FirebaseAuth.instance.currentUser!.uid);
+    } else {
+      upvoters.remove(FirebaseAuth.instance.currentUser!.uid);
+    }
+
+    if (downvoted) {
+      downvoters.add(FirebaseAuth.instance.currentUser!.uid);
+    } else {
+      downvoters.remove(FirebaseAuth.instance.currentUser!.uid);
+    }
+    upvotes = upvoters.length - downvoters.length;
+    await FirebaseFirestore.instance.collection("reports").doc(widget.id).set({
+      "upvotes": upvotes,
+      "upvoters": upvoters,
+      "downvoters": downvoters,
+    }, SetOptions(merge: true));
   }
 
   void _upvote() {
@@ -93,7 +126,7 @@ class _ListReportItemState extends State<ListReportItem> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 15),
-      constraints: const BoxConstraints.expand(height: 160),
+      constraints: const BoxConstraints.expand(height: 165),
       padding: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: Colors.grey.shade300,
@@ -227,7 +260,10 @@ class _ListReportItemState extends State<ListReportItem> {
                               ? Colors.black
                               : widget.color ?? Colors.grey.shade700,
                           iconSize: 30,
-                          onPressed: _upvote,
+                          onPressed: () async => {
+                            _upvote(),
+                            await _updateOnFirebase(),
+                          },
                         ),
                         SizedBox(
                             width: 50,
@@ -238,19 +274,21 @@ class _ListReportItemState extends State<ListReportItem> {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w500))),
                         IconButton(
-                          padding: const EdgeInsets.only(left: 8),
-                          icon: Transform.rotate(
-                              angle: 90 * pi / 180,
-                              child: Icon(downvoted
-                                  ? Icons.forward
-                                  : Icons.forward_outlined)),
-                          alignment: Alignment.center,
-                          iconSize: 30,
-                          color: downvoted
-                              ? Colors.black
-                              : widget.color ?? Colors.grey.shade700,
-                          onPressed: _downvote,
-                        ),
+                            padding: const EdgeInsets.only(left: 8),
+                            icon: Transform.rotate(
+                                angle: 90 * pi / 180,
+                                child: Icon(downvoted
+                                    ? Icons.forward
+                                    : Icons.forward_outlined)),
+                            alignment: Alignment.center,
+                            iconSize: 30,
+                            color: downvoted
+                                ? Colors.black
+                                : widget.color ?? Colors.grey.shade700,
+                            onPressed: () async => {
+                                  _downvote(),
+                                  await _updateOnFirebase(),
+                                }),
                       ],
                     )))
           ]),
