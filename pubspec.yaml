@@ -40,7 +40,7 @@ flutter:
     - assets/images/backgrounds/
     - assets/images/icons/
     - assets/images/profile/default_profile.png
-
+    - assets/map_styles/
 flutter_launcher_icons:
   android: true
   ios: true

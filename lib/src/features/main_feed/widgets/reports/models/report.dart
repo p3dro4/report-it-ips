@@ -4,6 +4,7 @@ import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/mode
 
 class Report {
   Report({
+    this.uid,
     this.title,
     this.description,
     this.tags,
@@ -17,6 +18,7 @@ class Report {
     this.resolved = false,
   });
 
+  String? uid;
   String? title;
   ReportType? type;
   String? description;
@@ -32,6 +34,7 @@ class Report {
   factory Report.fromSnapshot(Object? snapshot) {
     final report = snapshot as Map<Object?, Object?>;
     return Report(
+      uid: report["uid"] as String?,
       title: report["title"] as String?,
       description: report["description"] as String?,
       tags: report["tags"] as List<String>?,
@@ -51,16 +54,18 @@ class Report {
   }
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        "title": title,
-        "description": description,
-        "tags": tags,
-        "location": location,
-        "type": type?.name,
-        "upvotes": upvotes,
-        "timestamp": timestamp,
-        "bannerPhotoURL": bannerPhotoURL,
-        "upvoters": upvoters,
-        "downvoters": downvoters,
+        if (uid != null) "uid": uid,
+        if (title != null) "title": title,
+        if (description != null) "description": description,
+        if (tags != null) "tags": tags,
+        if (location != null) "location": location,
+        if (type != null) "type": type?.name,
+        if (upvotes != null) "upvotes": upvotes,
+        if (timestamp != null) "timestamp": timestamp,
+        if (bannerPhotoURL != null) "bannerPhotoURL": bannerPhotoURL,
+        if (upvoters != null) "upvoters": upvoters,
+        if (downvoters != null) "downvoters": downvoters,
+        "resolved": resolved,
       };
 
   @override
