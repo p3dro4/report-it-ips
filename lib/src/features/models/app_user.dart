@@ -36,7 +36,7 @@ class AppUser {
       gender: user[UserFields.gender.name] as String?,
       school: user[UserFields.school.name] != null
           ? School.values.firstWhere(
-              (e) => e.name == user[UserFields.school.name] as String)
+              (e) => e.shortName == user[UserFields.school.name] as String)
           : null,
       userType: user[UserFields.userType.name] != null
           ? AccountTypes.values.firstWhere(
@@ -55,7 +55,7 @@ class AppUser {
         UserFields.name.name: name,
         UserFields.birthdate.name: birthdate,
         UserFields.gender.name: gender,
-        if (course != null) UserFields.school.name: school?.name,
+        if (course != null) UserFields.school.name: school?.shortName,
         if (course != null) UserFields.course.name: course,
         if (schoolYear != null) UserFields.schoolYear.name: schoolYear,
         if (department != null) UserFields.department.name: department,

@@ -87,6 +87,11 @@ class _MainAppState extends State<MainApp> {
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
+          displayMedium: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
           displaySmall: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w400,

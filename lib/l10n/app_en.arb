@@ -313,5 +313,9 @@
     "title": "Title",
     "title_required": "Please provide a title",
     "fill_in_report_details": "Fill in report details",
-    "resolved": "Resolved"
+    "resolved": "Resolved",
+    "description": "Description",
+    "optional": "Optional",
+    "exceeded_max_characters": "Exceeded max characters",
+    "no_reports_yet": "No reports yet"
 }

@@ -8,7 +8,7 @@ enum ReportTag {
 }
 
 extension ReportTagExtension on ReportTag {
-  String get name {
+  String get shortName {
     return switch (this) {
       ReportTag.exterior => 'EXTERIOR',
       ReportTag.ese => 'ESE',
@@ -21,7 +21,7 @@ extension ReportTagExtension on ReportTag {
 
   int get color {
     return switch (this) {
-      ReportTag.exterior => 0xFF5F5959,
+      ReportTag.exterior => 0xFF857C7C,
       ReportTag.ese => 0xFFD12420,
       ReportTag.ess => 0xFFFDB924,
       ReportTag.ests => 0xFF4991CE,

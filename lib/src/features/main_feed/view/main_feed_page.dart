@@ -17,28 +17,40 @@ class MainFeedPage extends StatefulWidget {
 }
 
 class _MainFeedPageState extends State<MainFeedPage> {
-  bool processing = false;
+  bool _processing = false;
   AppUser? user;
   AppProfile? profile;
   int currentIndex = 0;
+  late Map<String, Report> _reports;
 
   Future<void> _getUser() async {
-    setState(() {
-      processing = true;
-    });
     await FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((value) => {
               user = AppUser.fromSnapshot(value.data()!),
-              processing = false,
             });
+  }
+
+  Future<Map<String, Report>> _loadReports() async {
+    _reports = {};
+    await FirebaseFirestore.instance
+        .collection("reports")
+        .orderBy("timestamp", descending: true)
+        .get()
+        .then((value) => {
+              value.docs.forEach((element) {
+                setState(() {
+                  _reports[element.id] = Report.fromSnapshot(element.data());
+                });
+              })
+            });
+    return _reports;
   }
 
   Future<void> initAll() async {
     await _getUser();
-
     await ProfileHandler.getProfile(FirebaseAuth.instance.currentUser!.uid)
         .then((value) => {
               setState(() {
@@ -54,18 +66,20 @@ class _MainFeedPageState extends State<MainFeedPage> {
                         })
                       })
             });
-    setState(() {
-      processing = false;
-    });
+    await _loadReports();
   }
 
   @override
   void initState() {
-    setState(() {
-      processing = true;
-    });
-    initAll();
     super.initState();
+    setState(() {
+      _processing = true;
+    });
+    initAll().then((value) => {
+          setState(() {
+            _processing = false;
+          })
+        });
   }
 
   @override
@@ -95,70 +109,48 @@ class _MainFeedPageState extends State<MainFeedPage> {
           : null,
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: 0,
-        onTap: processing
+        onTap: _processing
             ? null
-            : (value) => {
+            : (value) async {
+                setState(() {
+                  currentIndex = value;
                   setState(() {
-                    currentIndex = value;
-                  }),
-                },
+                    _processing = true;
+                  });
+                  _loadReports().then((value) => {
+                        setState(() {
+                          _processing = false;
+                        })
+                      });
+                });
+              },
       ),
       body: SafeArea(
-        child: processing
+        child: _processing
             ? const Center(
                 child: CircularProgressIndicator(),
               )
             : switch (currentIndex) {
-                0 => const HomePage(),
-                1 => const MapPage(),
+                1 => MapPage(reports: _reports),
                 2 => const CalendarPage(),
                 3 => ProfilePage(
                     user: user!,
                     profile: profile!,
-                  ),
-                _ => const HomePage(),
+                    onRefresh: () async {
+                      return await _loadReports();
+                    },
+                    reports: _reports),
+                _ => HomePage(
+                    reports: _reports,
+                    onRefresh: () async {
+                      return await _loadReports();
+                    }),
               },
       ),
       appBar: switch (currentIndex) {
-        1 || 2 => AppBar(
-            titleSpacing: 20,
-            title: Text(L.of(context)!.map,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500)),
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-        3 => AppBar(
-            titleSpacing: 20,
-            title: Text(L.of(context)!.profile,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500)),
-            backgroundColor: Theme.of(context).primaryColor,
-            actions: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: IconButton(
-                      onPressed: () async {
-                        bool refresh = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SettingsPage(
-                                      profile: profile,
-                                    )));
-                        if (refresh) {
-                          setState(() {});
-                        }
-                      },
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        weight: 300,
-                      )))
-            ],
-          ),
+        1 => MapPage.appBar(context),
+        2 => CalendarPage.appBar(context),
+        3 => ProfilePage.appBar(context, profile!, () => setState(() {})),
         _ => null,
       },
     );

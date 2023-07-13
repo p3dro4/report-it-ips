@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/report_tag.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -54,8 +55,9 @@ class _ListReportItemState extends State<ListReportItem> {
         .doc(widget.id)
         .get();
     int upvotes = doc.data()!["upvotes"] as int? ?? 0;
-    List<String> upvoters = List<String>.from(doc.data()!["upvoters"]);
-    List<String> downvoters = List<String>.from(doc.data()!["downvoters"]);
+    List<String> upvoters = List<String>.from(doc.data()!["upvoters"] ?? []);
+    List<String> downvoters =
+        List<String>.from(doc.data()!["downvoters"] ?? []);
 
     if (upvoted) {
       upvoters.add(FirebaseAuth.instance.currentUser!.uid);
@@ -155,9 +157,11 @@ class _ListReportItemState extends State<ListReportItem> {
                               children: [
                                 Icon(
                                   switch (report.type) {
-                                    ReportType.info => Icons.info,
-                                    ReportType.warning => Icons.warning,
-                                    ReportType.priority => Icons.priority_high,
+                                    ReportType.info => Icons.info_outline,
+                                    ReportType.warning =>
+                                      Icons.warning_outlined,
+                                    ReportType.priority =>
+                                      Icons.priority_high_outlined,
                                     _ => Icons.report
                                   },
                                   color: widget.color ?? Colors.grey.shade700,
@@ -201,12 +205,45 @@ class _ListReportItemState extends State<ListReportItem> {
                                     ))),
                         Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(report.title ?? "",
-                                softWrap: true,
-                                style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500))),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    report.title ?? "",
+                                    softWrap: true,
+                                    style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                  Row(
+                                    children: report.tags?.map((e) {
+                                          return Container(
+                                              padding: const EdgeInsets.all(2),
+                                              margin: const EdgeInsets.only(
+                                                  right: 10),
+                                              decoration: BoxDecoration(
+                                                color: Color(e.color),
+                                                shape: BoxShape.rectangle,
+                                                borderRadius:
+                                                    BorderRadius.circular(5),
+                                                border: Border.all(
+                                                  color: Colors.black,
+                                                  width: 1,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                e.shortName,
+                                                style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ));
+                                        }).toList() ??
+                                        [],
+                                  )
+                                ])),
                         if (report.resolved)
                           Positioned(
                             bottom: 0,

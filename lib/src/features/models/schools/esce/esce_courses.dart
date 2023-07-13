@@ -17,7 +17,7 @@ enum ESCECourses {
 }
 
 extension ESCECoursesExtension on ESCECourses {
-  String get name {
+  String get shortName {
     return switch (this) {
       ESCECourses.lcf => "LCF",
       ESCECourses.lgdl => "LGDL",

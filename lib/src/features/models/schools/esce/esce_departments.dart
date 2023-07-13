@@ -7,7 +7,7 @@ enum ESCEDepartments {
 }
 
 extension ESCEDepartmentsExtension on ESCEDepartments {
-  String get name {
+  String get shortName {
     return switch (this) {
       ESCEDepartments.drh => "DRH",
       ESCEDepartments.dcf => "DCF",

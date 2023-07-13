@@ -48,38 +48,38 @@ class _TeacherFormPageState extends State<TeacherFormPage> {
           child: Column(
             children: [
               CustomDropdownButton(
-                items: {for (var e in School.values) e.name: e.fullName},
+                items: {for (var e in School.values) e.shortName: e.fullName},
                 label: L.of(context)!.school,
                 prefixIcon: Icons.apartment,
                 color: Theme.of(context).colorScheme.primary,
                 errorColor: Theme.of(context).colorScheme.error,
                 onChanged: (value) => {
                   setState(() {
-                    _school = School.values.firstWhere((e) => e.name == value);
+                    _school = School.values.firstWhere((e) => e.shortName == value);
                     _department = null;
                     _departments = switch (_school) {
                       School.ests => {
                           for (var e in ESTSDepartments.values)
-                            e.name: e.fullName
+                            e.shortName: e.fullName
                         },
                       School.ese => {
                           for (var e in ESEDepartments.values)
-                            e.name: e.fullName
+                            e.shortName: e.fullName
                         },
                       School.ess => {
                           for (var e in ESSDepartments.values)
-                            e.name: e.fullName
+                            e.shortName: e.fullName
                         },
                       School.esce => {
                           for (var e in ESCEDepartments.values)
-                            e.name: e.fullName
+                            e.shortName: e.fullName
                         },
                       _ => {},
                     };
                   })
                 },
                 onSaved: (value) => {
-                  _school = School.values.firstWhere((e) => e.name == value)
+                  _school = School.values.firstWhere((e) => e.shortName == value)
                 },
                 validator: (value) {
                   if (value?.isEmpty ?? true) {

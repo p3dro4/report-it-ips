@@ -100,5 +100,9 @@
     "title": "Título",
     "title_required": "O campo título é obrigatório",
     "fill_in_report_details": "Preencha os detalhes do reporte",
-    "resolved": "Resolvido"
+    "resolved": "Resolvido",
+    "description": "Descrição",
+    "optional": "Opcional",
+    "exceeded_max_characters": "Excedeu o número máximo de caracteres",
+    "no_reports_yet": "Ainda não existem reportes"
 }

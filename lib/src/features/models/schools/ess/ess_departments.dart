@@ -6,7 +6,7 @@ enum ESSDepartments {
 }
 
 extension ESSDepartmentsExtension on ESSDepartments {
-  String get name {
+  String get shortName {
     return switch (this) {
       ESSDepartments.df => "DF",
       ESSDepartments.de => "DE",

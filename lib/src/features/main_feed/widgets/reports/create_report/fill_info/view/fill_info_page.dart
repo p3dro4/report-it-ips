@@ -19,7 +19,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
   bool _omitBackground = false;
 
   String? _fieldTitle;
-
+  String? _fieldDescription = "";
   @override
   void initState() {
     report = widget.report;
@@ -90,6 +90,15 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  L.of(context)!.title,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium,
+                                                )),
+                                            const SizedBox(height: 10),
                                             CustomFormInputField(
                                               prefixIcon: Icons.title,
                                               labelText: L.of(context)!.title,
@@ -114,31 +123,70 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                                 _fieldTitle = value;
                                               },
                                             ),
-                                            const SizedBox(height: 20),
-                                            CustomFormInputField(
-                                              prefixIcon: Icons.title,
-                                              labelText: L.of(context)!.title,
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              errorColor: Theme.of(context)
-                                                  .colorScheme
-                                                  .error,
-                                              keyboardType: TextInputType.text,
+                                            const SizedBox(height: 30),
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  L.of(context)!.description,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium,
+                                                )),
+                                            const SizedBox(height: 10),
+                                            TextFormField(
+                                              minLines: 3,
+                                              maxLines: 3,
                                               textInputAction:
-                                                  TextInputAction.next,
+                                                  TextInputAction.newline,
+                                              keyboardType:
+                                                  TextInputType.multiline,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _fieldDescription = value;
+                                                });
+                                              },
                                               validator: (value) {
-                                                if (value?.isEmpty ?? true) {
+                                                if ((value?.length ?? 0) > 90) {
                                                   return L
                                                       .of(context)!
-                                                      .title_required;
+                                                      .exceeded_max_characters;
                                                 }
-
                                                 return null;
                                               },
-                                              onSaved: (value) {
-                                                _fieldTitle = value;
-                                              },
+                                              decoration: InputDecoration(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .primary)),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: Theme.of(
+                                                                    context)
+                                                                .colorScheme
+                                                                .primary)),
+                                                labelText:
+                                                    "${L.of(context)!.description} (${L.of(context)!.optional.toLowerCase()})",
+                                                alignLabelWithHint: true,
+                                                contentPadding:
+                                                    const EdgeInsets.all(10),
+                                                counterText:
+                                                    " ${_fieldDescription?.length ?? 0}/90",
+                                                counterStyle: TextStyle(
+                                                    color: (_fieldDescription
+                                                                    ?.length ??
+                                                                0) >
+                                                            90
+                                                        ? Theme.of(context)
+                                                            .colorScheme
+                                                            .error
+                                                        : Theme.of(context)
+                                                            .colorScheme
+                                                            .primary),
+                                              ),
                                             ),
                                             const SizedBox(height: 40),
                                             CustomSubmitButton(
@@ -149,6 +197,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                               textColor: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimary,
+                                              callback: () {},
                                             ),
                                           ])),
                                   // * This SizedBox is used to push the form up when the keyboard is open

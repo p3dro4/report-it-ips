@@ -20,7 +20,7 @@ enum ESECourses {
 }
 
 extension EseCoursesExtension on ESECourses {
-  String get name {
+  String get shortName {
     return switch (this) {
       ESECourses.las => "LAS",
       ESECourses.lcs => "LCS",

@@ -8,13 +8,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/reports/reports.dart';
 
-//TODO: Implement MapPage
 class MapPage extends StatefulWidget {
-  const MapPage({super.key});
+  const MapPage({super.key, required this.reports});
+
+  final Map<String, Report> reports;
 
   static const CameraPosition _ipsCameraPosition = CameraPosition(
-    target: LatLng(38.52214493318472, -8.83882342859453),
-    zoom: 16,
+    target: LatLng(38.5219554772082, -8.839772343635559),
+    zoom: 16.75,
   );
 
   static AppBar appBar(BuildContext context) {
@@ -39,13 +40,8 @@ class _MapPageState extends State<MapPage> {
   ReportType? _currentFilter;
   String? _searchText;
   String? _mapStyle;
-  final Set<Marker> _markers = {
-    Marker(
-      markerId: MarkerId("1"),
-      position: LatLng(38.521792, -8.839307),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-    )
-  };
+  late Map<String, Report> _reports;
+  final Set<Marker> _markers = {};
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -63,12 +59,39 @@ class _MapPageState extends State<MapPage> {
     await Permission.location.request();
   }
 
+  Future<void> _initMarkers() async {
+    _markers.clear();
+    _reports.forEach((key, value) {
+      final color = value.resolved
+          ? BitmapDescriptor.hueGreen
+          : switch (value.type) {
+              ReportType.priority => BitmapDescriptor.hueRed,
+              ReportType.warning => BitmapDescriptor.hueYellow,
+              _ => BitmapDescriptor.hueBlue
+            };
+      //TODO: Add on tap to marker
+      _markers.add(
+        Marker(
+          markerId: MarkerId(key),
+          position: value.location!,
+          icon: BitmapDescriptor.defaultMarkerWithHue(color),
+          infoWindow: InfoWindow(
+            title: value.title,
+            snippet: value.description,
+          ),
+        ),
+      );
+    });
+  }
+
   @override
   void initState() {
     _requestPermission();
     rootBundle.loadString('assets/map_styles/map_style.json').then((string) {
       _mapStyle = string;
     });
+    _reports = widget.reports;
+    _initMarkers();
     super.initState();
   }
 
@@ -80,7 +103,17 @@ class _MapPageState extends State<MapPage> {
           mapType: _currentMapType,
           initialCameraPosition: MapPage._ipsCameraPosition,
           onMapCreated: _onMapCreated,
-          markers: _markers,
+          markers: _markers
+              .where((element) =>
+                  _currentFilter == null ||
+                  (_reports[element.markerId.value]!.type == _currentFilter &&
+                      !_reports[element.markerId.value]!.resolved))
+              .where((element) =>
+                  _searchText == null ||
+                  element.infoWindow.title!
+                      .toLowerCase()
+                      .contains(_searchText!.toLowerCase()))
+              .toSet(),
         ),
         Column(children: [
           Padding(

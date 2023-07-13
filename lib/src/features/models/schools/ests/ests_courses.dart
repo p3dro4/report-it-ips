@@ -33,7 +33,7 @@ enum ESTSCourses {
 }
 
 extension ESTSCoursesExtension on ESTSCourses {
-  String get name {
+  String get shortName {
     switch (this) {
       case ESTSCourses.leec:
         return 'LEEC';

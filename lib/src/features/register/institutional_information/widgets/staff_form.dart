@@ -47,18 +47,18 @@ class _StaffFormPageState extends State<StaffFormPage> {
           child: Column(
             children: [
               CustomDropdownButton(
-                items: {for (var e in School.values) e.name: e.fullName},
+                items: {for (var e in School.values) e.shortName: e.fullName},
                 label: L.of(context)!.school,
                 prefixIcon: Icons.apartment,
                 color: Theme.of(context).colorScheme.primary,
                 errorColor: Theme.of(context).colorScheme.error,
                 onChanged: (value) => {
                   setState(() {
-                    _school = School.values.firstWhere((e) => e.name == value);
+                    _school = School.values.firstWhere((e) => e.shortName == value);
                   })
                 },
                 onSaved: (value) => {
-                  _school = School.values.firstWhere((e) => e.name == value)
+                  _school = School.values.firstWhere((e) => e.shortName == value)
                 },
                 validator: (value) {
                   if (value?.isEmpty ?? true) {

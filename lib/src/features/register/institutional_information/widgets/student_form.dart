@@ -50,34 +50,34 @@ class _StudentFormPageState extends State<StudentFormPage> {
           child: Column(
             children: [
               CustomDropdownButton(
-                items: {for (var e in School.values) e.name: e.fullName},
+                items: {for (var e in School.values) e.shortName: e.fullName},
                 label: L.of(context)!.school,
                 prefixIcon: Icons.apartment,
                 color: Theme.of(context).colorScheme.primary,
                 errorColor: Theme.of(context).colorScheme.error,
                 onChanged: (value) => {
                   setState(() {
-                    _school = School.values.firstWhere((e) => e.name == value);
+                    _school = School.values.firstWhere((e) => e.shortName == value);
                     _course = null;
                     _courses = switch (_school) {
                       School.ests => {
-                          for (var e in ESTSCourses.values) e.name: e.fullName
+                          for (var e in ESTSCourses.values) e.shortName: e.fullName
                         },
                       School.ese => {
-                          for (var e in ESECourses.values) e.name: e.fullName
+                          for (var e in ESECourses.values) e.shortName: e.fullName
                         },
                       School.ess => {
-                          for (var e in ESSCourses.values) e.name: e.fullName
+                          for (var e in ESSCourses.values) e.shortName: e.fullName
                         },
                       School.esce => {
-                          for (var e in ESCECourses.values) e.name: e.fullName
+                          for (var e in ESCECourses.values) e.shortName: e.fullName
                         },
                       _ => {}
                     };
                   })
                 },
                 onSaved: (value) => {
-                  _school = School.values.firstWhere((e) => e.name == value)
+                  _school = School.values.firstWhere((e) => e.shortName == value)
                 },
                 validator: (value) {
                   if (value?.isEmpty ?? true) {

@@ -6,7 +6,7 @@ enum School {
 }
 
 extension SchoolExtension on School {
-  String get name {
+  String get shortName {
     switch (this) {
       case School.ests:
         return 'ESTS';

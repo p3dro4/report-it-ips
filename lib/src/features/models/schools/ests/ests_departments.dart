@@ -7,7 +7,7 @@ enum ESTSDepartments {
 }
 
 extension ESTSDepartmentsExtension on ESTSDepartments {
-  String get name {
+  String get shortName {
     switch (this) {
       case ESTSDepartments.dee:
         return 'DEE';

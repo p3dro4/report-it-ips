@@ -8,6 +8,8 @@ class ProfileHandler {
       displayName: FirebaseAuth.instance.currentUser!.displayName!,
       photoURL: FirebaseAuth.instance.currentUser!.photoURL,
     );
+    profile.nPoints = 0;
+    profile.nReports = 0;
     await FirebaseFirestore.instance
         .collection("profiles")
         .doc(uid)

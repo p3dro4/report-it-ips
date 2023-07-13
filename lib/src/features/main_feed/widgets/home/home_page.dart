@@ -8,7 +8,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 // TODO Fix bug where there are duplicate reports\
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({super.key, required this.reports, required this.onRefresh});
+
+  final Map<String, Report> reports;
+  final Future<Map<String, Report>> Function() onRefresh;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -22,6 +25,7 @@ class _HomePageState extends State<HomePage> {
   late List<HighlightsBanner> _highlights;
   late Map<String, Report> _reports;
   late Map<DateTime, Map<String, Report>> _reportsByDate;
+  late Future<Map<String, Report>> Function() _onRefresh;
 
   Future<void> _initBanner() async {
     _highlights = [];
@@ -40,23 +44,7 @@ class _HomePageState extends State<HomePage> {
             });
   }
 
-  Future<void> _loadReports() async {
-    _reports = {};
-    await FirebaseFirestore.instance
-        .collection("reports")
-        .orderBy("timestamp", descending: true)
-        .get()
-        .then((value) => {
-              value.docs.forEach((element) {
-                setState(() {
-                  _reports[element.id] = Report.fromSnapshot(element.data());
-                });
-              })
-            });
-    //print("Date: ${DateFormat("dd-MM-yyyy").format(DateTime.now())}");
-  }
-
-  Future<void> _organizeByDate() async {
+  void _organizeByDate() {
     _reportsByDate = {};
     _reports.forEach((key, value) {
       DateTime dateTime = DateFormat("dd-MM-yyyy").parse(
@@ -71,27 +59,33 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> _onRefresh() async {
+  Future<void> _refresh() async {
     setState(() {
       _processing = true;
     });
     await _initBanner();
-    await _loadReports().then((value) => {
-          _organizeByDate().then((value) => {
-                setState(() {
-                  _processing = false;
-                })
-              })
+    await _onRefresh().then((value) {
+      _reports = value;
+      _organizeByDate();
+    }).then((value) => {
+          setState(() {
+            _processing = false;
+          })
         });
   }
 
   @override
   void initState() {
-    _processing = true;
+    setState(() {
+      _processing = true;
+    });
     _initBanner();
-    _loadReports().then((value) => {
-          _organizeByDate().then((value) => {_processing = false})
-        });
+    _reports = widget.reports;
+    _onRefresh = widget.onRefresh;
+    _organizeByDate();
+    setState(() {
+      _processing = false;
+    });
     super.initState();
   }
 
@@ -202,7 +196,7 @@ class _HomePageState extends State<HomePage> {
                             height: MediaQuery.of(context).size.height * 0.70),
                         child: RefreshIndicator(
                             triggerMode: RefreshIndicatorTriggerMode.onEdge,
-                            onRefresh: _onRefresh,
+                            onRefresh: _refresh,
                             child: ListView.builder(
                               itemCount: _reportsByDate.length + 1,
                               itemBuilder: (context, index) {
@@ -292,9 +286,10 @@ class _HomePageState extends State<HomePage> {
                                               report: e.value,
                                             ))
                                         .where((element) =>
-                                            (_currentFilter == null ||
-                                                element.report.type ==
-                                                    _currentFilter))
+                                            _currentFilter == null ||
+                                            (element.report.type ==
+                                                    _currentFilter &&
+                                                !element.report.resolved))
                                         .map((e) => e)
                                         .where((element) => element
                                             .report.title!
