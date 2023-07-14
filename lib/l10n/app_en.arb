@@ -317,5 +317,12 @@
     "description": "Description",
     "optional": "Optional",
     "exceeded_max_characters": "Exceeded max characters",
-    "no_reports_yet": "No reports yet"
+    "no_reports_yet": "No reports yet",
+    "tags": "Tags",
+    "general": "General",
+    "fill_in_report_location": "Fill with the problem location",
+    "location": "Location",
+    "current_location": "Current location",
+    "locate_on_map": "Locate on map",
+    "location_outside_campus": "Location outside campus"
 }

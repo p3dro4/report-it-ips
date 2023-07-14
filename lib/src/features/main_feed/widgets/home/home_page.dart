@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/reports.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
+import 'package:report_it_ips/src/features/reports/reports.dart';
 import 'package:report_it_ips/src/utils/background_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

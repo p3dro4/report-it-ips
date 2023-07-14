@@ -6,14 +6,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/reports.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 
 class MapPage extends StatefulWidget {
   const MapPage({super.key, required this.reports});
 
   final Map<String, Report> reports;
 
-  static const CameraPosition _ipsCameraPosition = CameraPosition(
+  static const CameraPosition ipsCameraPosition = CameraPosition(
     target: LatLng(38.5219554772082, -8.839772343635559),
     zoom: 16.75,
   );
@@ -101,7 +101,7 @@ class _MapPageState extends State<MapPage> {
       children: [
         GoogleMap(
           mapType: _currentMapType,
-          initialCameraPosition: MapPage._ipsCameraPosition,
+          initialCameraPosition: MapPage.ipsCameraPosition,
           onMapCreated: _onMapCreated,
           markers: _markers
               .where((element) =>
@@ -220,7 +220,7 @@ class _MapPageState extends State<MapPage> {
           child: FloatingActionButton(
             onPressed: () {
               mapController.animateCamera(
-                  CameraUpdate.newCameraPosition(MapPage._ipsCameraPosition));
+                  CameraUpdate.newCameraPosition(MapPage.ipsCameraPosition));
             },
             elevation: 5,
             backgroundColor: Theme.of(context).primaryColor,

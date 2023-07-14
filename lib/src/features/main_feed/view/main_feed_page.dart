@@ -2,10 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/profile/models/profile.dart';
-import 'package:report_it_ips/src/features/models/app_profile.dart';
-import 'package:report_it_ips/src/features/models/app_user.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 
 class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key, this.user});

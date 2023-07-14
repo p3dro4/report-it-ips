@@ -1,29 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/models.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
+import 'package:report_it_ips/src/features/reports/create_report/create_report.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FillInfoPage extends StatefulWidget {
   const FillInfoPage({super.key, required this.report});
 
-  final Report? report;
+  final Report report;
 
   @override
   State<FillInfoPage> createState() => _FillInfoPageState();
 }
 
 class _FillInfoPageState extends State<FillInfoPage> {
-  Report? report;
+  late Report report;
   bool _submitting = false;
   final _formKey = GlobalKey<FormState>();
   bool _omitBackground = false;
+  bool _showTagsOverlay = false;
 
   String? _fieldTitle;
   String? _fieldDescription = "";
+  final Set<ReportTag> _tags = {};
+
   @override
   void initState() {
     report = widget.report;
     super.initState();
+  }
+
+  Future<void> _continueToNextPage() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      setState(() {
+        _submitting = true;
+      });
+      report.title = _fieldTitle!;
+      report.description = _fieldDescription!;
+      report.tags = _tags.toList();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SelectLocationPage(
+                    report: report,
+                  )));
+    }
   }
 
   @override
@@ -109,8 +131,10 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                                   .colorScheme
                                                   .error,
                                               keyboardType: TextInputType.text,
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
                                               textInputAction:
-                                                  TextInputAction.next,
+                                                  TextInputAction.done,
                                               validator: (value) {
                                                 if (value?.isEmpty ?? true) {
                                                   return L
@@ -122,8 +146,102 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                               onSaved: (value) {
                                                 _fieldTitle = value;
                                               },
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _fieldTitle = value;
+                                                });
+                                              },
+                                              counterText:
+                                                  "${_fieldTitle?.length ?? 0}/40",
+                                              counterStyle: TextStyle(
+                                                  color: (_fieldTitle?.length ??
+                                                              0) >
+                                                          40
+                                                      ? Theme.of(context)
+                                                          .colorScheme
+                                                          .error
+                                                      : Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
                                             ),
-                                            const SizedBox(height: 30),
+                                            Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  L.of(context)!.tags,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .displayMedium,
+                                                )),
+                                            Row(
+                                              children: [
+                                                for (var tag in _tags)
+                                                  Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          vertical: 10),
+                                                      child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal: 5,
+                                                                  vertical: 5),
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  right: 10),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Color(
+                                                                tag.color),
+                                                            shape: BoxShape
+                                                                .rectangle,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5),
+                                                          ),
+                                                          child: Text(
+                                                            tag.getNameWithContext(
+                                                                context),
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 10,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ))),
+                                                if (_tags.isNotEmpty)
+                                                  IconButton(
+                                                      padding: EdgeInsets.zero,
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _tags.remove(
+                                                              _tags.last);
+                                                        });
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.remove,
+                                                        weight: 1000,
+                                                      )),
+                                                if (_tags.length < 3)
+                                                  IconButton(
+                                                      padding: EdgeInsets.zero,
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          _showTagsOverlay =
+                                                              true;
+                                                        });
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.add,
+                                                        weight: 1000,
+                                                      )),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 10),
                                             Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
@@ -188,7 +306,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                                             .primary),
                                               ),
                                             ),
-                                            const SizedBox(height: 40),
+                                            const SizedBox(height: 30),
                                             CustomSubmitButton(
                                               text: L.of(context)!.next,
                                               color: Theme.of(context)
@@ -197,7 +315,12 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                               textColor: Theme.of(context)
                                                   .colorScheme
                                                   .onPrimary,
-                                              callback: () {},
+                                              callback: () {
+                                                _continueToNextPage().then(
+                                                    (value) => setState(() {
+                                                          _submitting = false;
+                                                        }));
+                                              },
                                             ),
                                           ])),
                                   // * This SizedBox is used to push the form up when the keyboard is open
@@ -236,6 +359,21 @@ class _FillInfoPageState extends State<FillInfoPage> {
                         onPressed: () => {
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst),
+                            }))),
+          if (_showTagsOverlay)
+            Padding(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.27),
+                child: TapRegion(
+                    onTapOutside: (value) => setState(() {
+                          _showTagsOverlay = false;
+                        }),
+                    child: SelectTag(
+                        onTap: (value) => {
+                              _tags.add(value),
+                              setState(() {
+                                _showTagsOverlay = false;
+                              }),
                             }))),
         ])));
   }

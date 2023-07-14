@@ -9,6 +9,9 @@ class CustomFormInputField extends StatefulWidget {
       this.callbackSuffixIcon,
       this.obscureText = false,
       this.validator,
+      this.onChanged,
+      this.counterText,
+      this.counterStyle,
       this.onSaved,
       this.keyboardType,
       this.textInputAction,
@@ -29,6 +32,9 @@ class CustomFormInputField extends StatefulWidget {
   final TextInputAction? textInputAction;
   final ValueChanged<String>? onFieldSubmitted;
   final TextCapitalization textCapitalization;
+  final String? counterText;
+  final TextStyle? counterStyle;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<CustomFormInputField> createState() => _CustomFormInputFieldState();
@@ -78,17 +84,21 @@ class _CustomFormInputFieldState extends State<CustomFormInputField> {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: _inputFieldDecorations(
-          widget.prefixIcon,
-          widget.labelText,
-          widget.color,
-          widget.errorColor,
-          widget.suffixIcon,
-          widget.callbackSuffixIcon),
+              widget.prefixIcon,
+              widget.labelText,
+              widget.color,
+              widget.errorColor,
+              widget.suffixIcon,
+              widget.callbackSuffixIcon)
+          .copyWith(
+              counterText: widget.counterText,
+              counterStyle: widget.counterStyle),
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
       obscureText: widget.obscureText,
       validator: widget.validator,
       onSaved: widget.onSaved,
+      onChanged: widget.onChanged,
       textCapitalization: widget.textCapitalization,
       onFieldSubmitted: widget.onFieldSubmitted,
       onTapOutside: (value) => FocusScope.of(context).unfocus(),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/create_report/fill_info/view/fill_info_page.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/models.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/reports.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
+import 'package:report_it_ips/src/features/reports/create_report/fill_info/view/fill_info_page.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

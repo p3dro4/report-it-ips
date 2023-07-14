@@ -4,3 +4,6 @@ export 'account_type.dart';
 export 'schools/school.dart';
 export 'schools/schools.dart';
 export 'league_type.dart';
+export 'report.dart';
+export 'report_type.dart';
+export 'report_tag.dart';

@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/report_tag.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
+import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 //TODO: Tags
@@ -219,7 +218,10 @@ class _ListReportItemState extends State<ListReportItem> {
                                   Row(
                                     children: report.tags?.map((e) {
                                           return Container(
-                                              padding: const EdgeInsets.all(2),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2),
                                               margin: const EdgeInsets.only(
                                                   right: 10),
                                               decoration: BoxDecoration(
@@ -227,16 +229,13 @@ class _ListReportItemState extends State<ListReportItem> {
                                                 shape: BoxShape.rectangle,
                                                 borderRadius:
                                                     BorderRadius.circular(5),
-                                                border: Border.all(
-                                                  color: Colors.black,
-                                                  width: 1,
-                                                ),
                                               ),
                                               child: Text(
-                                                e.shortName,
+                                                e.getNameWithContext(context),
+                                                textAlign: TextAlign.center,
                                                 style: const TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: 12,
+                                                    color: Colors.white,
+                                                    fontSize: 10,
                                                     fontWeight:
                                                         FontWeight.w500),
                                               ));

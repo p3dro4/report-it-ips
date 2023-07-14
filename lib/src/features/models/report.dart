@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/models.dart';
-import 'package:report_it_ips/src/features/main_feed/widgets/reports/models/report_tag.dart';
+import 'models.dart';
 
 class Report {
   Report({
@@ -68,7 +67,7 @@ class Report {
         if (uid != null) "uid": uid,
         if (title != null) "title": title,
         if (description != null) "description": description,
-        if (tags != null) "tags": tags?.map((e) => e.name).toList(),
+        if (tags != null) "tags": tags?.map((e) => e.shortName).toList(),
         if (location != null) "location": location,
         if (type != null) "type": type?.name,
         if (upvotes != null) "upvotes": upvotes,

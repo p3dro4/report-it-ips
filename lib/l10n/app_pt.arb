@@ -99,10 +99,17 @@
     "select_report_type": "Selecione o tipo de reporte",
     "title": "Título",
     "title_required": "O campo título é obrigatório",
-    "fill_in_report_details": "Preencha os detalhes do reporte",
+    "fill_in_report_details": "Preencha os dados sobre o reporte",
     "resolved": "Resolvido",
     "description": "Descrição",
     "optional": "Opcional",
     "exceeded_max_characters": "Excedeu o número máximo de caracteres",
-    "no_reports_yet": "Ainda não existem reportes"
+    "no_reports_yet": "Ainda não existem reportes",
+    "tags": "Etiquetas",
+    "general": "Geral",
+    "fill_in_report_location": "Preencha com a localização do problema",
+    "location": "Localização",
+    "current_location": "Localização atual",
+    "locate_on_map": "Localizar no mapa",
+    "location_outside_campus": "Localização fora do campus"
 }
