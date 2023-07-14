@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 
 class MapPage extends StatefulWidget {
@@ -67,9 +68,8 @@ class _MapPageState extends State<MapPage> {
           : switch (value.type) {
               ReportType.priority => BitmapDescriptor.hueRed,
               ReportType.warning => BitmapDescriptor.hueYellow,
-              _ => BitmapDescriptor.hueBlue
+              _ => BitmapDescriptor.hueAzure
             };
-      //TODO: Add on tap to marker
       _markers.add(
         Marker(
           markerId: MarkerId(key),
@@ -78,6 +78,14 @@ class _MapPageState extends State<MapPage> {
           infoWindow: InfoWindow(
             title: value.title,
             snippet: value.description,
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DetailsReportPage(
+                            report: value,
+                          )));
+            },
           ),
         ),
       );
@@ -206,6 +214,7 @@ class _MapPageState extends State<MapPage> {
           margin: const EdgeInsets.only(top: 125, right: 10),
           alignment: Alignment.topRight,
           child: FloatingActionButton(
+            heroTag: "map_type",
             onPressed: _changeMapType,
             elevation: 5,
             backgroundColor: Theme.of(context).primaryColor,
@@ -218,6 +227,7 @@ class _MapPageState extends State<MapPage> {
           margin: const EdgeInsets.only(bottom: 20),
           alignment: Alignment.bottomCenter,
           child: FloatingActionButton(
+            heroTag: "center_map",
             onPressed: () {
               mapController.animateCamera(
                   CameraUpdate.newCameraPosition(MapPage.ipsCameraPosition));

@@ -36,8 +36,8 @@ class _FillInfoPageState extends State<FillInfoPage> {
       setState(() {
         _submitting = true;
       });
-      report.title = _fieldTitle!;
-      report.description = _fieldDescription!;
+      report.title = _fieldTitle!.trim();
+      report.description = _fieldDescription!.trim();
       report.tags = _tags.toList();
       Navigator.push(
           context,
@@ -258,6 +258,8 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                                   TextInputAction.newline,
                                               keyboardType:
                                                   TextInputType.multiline,
+                                              textCapitalization:
+                                                  TextCapitalization.sentences,
                                               onChanged: (value) {
                                                 setState(() {
                                                   _fieldDescription = value;

@@ -285,6 +285,16 @@ class _HomePageState extends State<HomePage> {
                                         .map((e) => ListReportItem(
                                               id: e.key,
                                               report: e.value,
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return DetailsReportPage(
+                                                      report: e.value,
+                                                    );
+                                                  },
+                                                ));
+                                              },
                                             ))
                                         .where((element) =>
                                             _currentFilter == null ||

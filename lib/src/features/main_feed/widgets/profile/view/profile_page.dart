@@ -184,6 +184,14 @@ class ProfilePageState extends State<ProfilePage> {
                 .toList()[index]
                 .entries
                 .map((e) => ListReportItem(
+                      onTap: () async {
+                        await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => DetailsReportPage(
+                                      report: e.value,
+                                    ))).then((value) => setState(() {}));
+                      },
                       report: e.value,
                       id: e.key,
                     ))
@@ -226,7 +234,6 @@ class ProfilePageState extends State<ProfilePage> {
         });
   }
 
-  //TODO: Change to listview
   // TODO Add functionality to view leaderboard
   @override
   Widget build(BuildContext context) {

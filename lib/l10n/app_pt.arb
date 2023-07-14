@@ -112,5 +112,15 @@
     "current_location": "Localização atual",
     "locate_on_map": "Localizar no mapa",
     "location_outside_campus": "Localização fora do campus",
-    "select_images": "Selecione imagens para o reporte"
+    "select_images": "Selecione imagens para o reporte",
+    "banner_photo": "Foto de capa",
+    "additional_photos": "Fotos adicionais",
+    "add_photo": "Adicionar foto",
+    "take_photo": "Tirar foto",
+    "publish_report": "Publicar reporte",
+    "report_created_successfully": "Reporte criado com sucesso",
+    "report_confirmation": "Deseja publicar o reporte?",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar",
+    "banner_image_required": "É necessário selecionar uma foto de capa"
 }

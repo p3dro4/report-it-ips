@@ -3,20 +3,20 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'models.dart';
 
 class Report {
-  Report({
-    this.uid,
-    this.title,
-    this.description,
-    this.tags,
-    this.location,
-    this.type,
-    this.upvotes,
-    this.timestamp,
-    this.bannerPhotoURL,
-    this.upvoters,
-    this.downvoters,
-    this.resolved = false,
-  });
+  Report(
+      {this.uid,
+      this.title,
+      this.description,
+      this.tags,
+      this.location,
+      this.type,
+      this.upvotes,
+      this.timestamp,
+      this.bannerPhotoURL,
+      this.upvoters,
+      this.downvoters,
+      this.resolved = false,
+      this.addicionalPhotosURL});
 
   String? uid;
   String? title;
@@ -30,6 +30,11 @@ class Report {
   int? upvotes;
   List<String>? upvoters = [];
   List<String>? downvoters = [];
+  List<String>? addicionalPhotosURL = [];
+
+  void setAdicionalPhotosURL(List<String> addicionalPhotosURL) {
+    this.addicionalPhotosURL = addicionalPhotosURL;
+  }
 
   factory Report.fromSnapshot(Object? snapshot) {
     final report = snapshot as Map<Object?, Object?>;
@@ -60,6 +65,8 @@ class Report {
       downvoters:
           List<String>.from(report["downvoters"] as List<dynamic>? ?? []),
       resolved: report["resolved"] as bool? ?? false,
+      addicionalPhotosURL: List<String>.from(
+          report["adicionalPhotosURL"] as List<dynamic>? ?? []),
     );
   }
 
@@ -68,7 +75,8 @@ class Report {
         if (title != null) "title": title,
         if (description != null) "description": description,
         if (tags != null) "tags": tags?.map((e) => e.shortName).toList(),
-        if (location != null) "location": location,
+        if (location != null)
+          "location": GeoPoint(location!.latitude, location!.longitude),
         if (type != null) "type": type?.name,
         if (upvotes != null) "upvotes": upvotes,
         if (timestamp != null) "timestamp": timestamp,
@@ -76,10 +84,12 @@ class Report {
         if (upvoters != null) "upvoters": upvoters,
         if (downvoters != null) "downvoters": downvoters,
         "resolved": resolved,
+        if (addicionalPhotosURL != null)
+          "adicionalPhotosURL": addicionalPhotosURL,
       };
 
   @override
   String toString() {
-    return "### Report ###\nTitle: $title\nDescription: $description\nTags: $tags\nLocation: $location\nType: $type\nUpvotes: $upvotes\nTimestamp: $timestamp\nBannerPhotoURL: $bannerPhotoURL\nUpvoters: $upvoters\nDownvoters: $downvoters\nResolved: $resolved\n";
+    return "### Report ###\nUid: $uid\nTitle: $title\nDescription: $description\nTags: $tags\nLocation: $location\nType: $type\nUpvotes: $upvotes\nTimestamp: $timestamp\nBannerPhotoURL: $bannerPhotoURL\nAdicionalPhotos: $addicionalPhotosURL\nUpvoters: $upvoters\nDownvoters: $downvoters\nResolved: $resolved\n";
   }
 }

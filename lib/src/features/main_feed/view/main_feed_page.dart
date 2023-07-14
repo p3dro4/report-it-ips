@@ -84,7 +84,7 @@ class _MainFeedPageState extends State<MainFeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: currentIndex == 0
+      floatingActionButton: currentIndex == 0 && !_processing
           ? Padding(
               padding: const EdgeInsets.all(10),
               child: SizedBox(
@@ -94,14 +94,19 @@ class _MainFeedPageState extends State<MainFeedPage> {
                     shape: const CircleBorder(),
                     child: const Icon(Icons.add_rounded, size: 50),
                     onPressed: () async {
-                      bool? refresh = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const SelectReportTypePage()));
-                      if (refresh ?? false) {
-                        setState(() {});
-                      }
+                      await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SelectReportTypePage()))
+                          .then((value) => setState(() {
+                                _processing = true;
+                                _loadReports().then((value) => {
+                                      setState(() {
+                                        _processing = false;
+                                      })
+                                    });
+                              }));
                     },
                   )))
           : null,
@@ -109,19 +114,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
         currentIndex: 0,
         onTap: _processing
             ? null
-            : (value) async {
-                setState(() {
-                  currentIndex = value;
-                  setState(() {
-                    _processing = true;
-                  });
-                  _loadReports().then((value) => {
-                        setState(() {
-                          _processing = false;
-                        })
-                      });
-                });
-              },
+            : (index) => setState(() {
+                  currentIndex = index;
+                }),
       ),
       body: SafeArea(
         child: _processing
@@ -129,7 +124,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
                 child: CircularProgressIndicator(),
               )
             : switch (currentIndex) {
-                1 => MapPage(reports: _reports),
+                1 => MapPage(
+                    reports: _reports,
+                  ),
                 2 => const CalendarPage(),
                 3 => ProfilePage(
                     user: user!,

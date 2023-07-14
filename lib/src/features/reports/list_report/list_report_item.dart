@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-//TODO: Tags
 class ListReportItem extends StatefulWidget {
   const ListReportItem(
       {super.key,
@@ -77,6 +76,12 @@ class _ListReportItemState extends State<ListReportItem> {
     }, SetOptions(merge: true));
   }
 
+  void _updateUpvotes() {
+    setState(() {
+      report.upvotes = upvotes;
+    });
+  }
+
   void _upvote() {
     if (downvoted) {
       setState(() {
@@ -98,6 +103,7 @@ class _ListReportItemState extends State<ListReportItem> {
       });
       report.upvoters?.add(FirebaseAuth.instance.currentUser!.uid);
     }
+    _updateUpvotes();
   }
 
   void _downvote() {
@@ -121,6 +127,7 @@ class _ListReportItemState extends State<ListReportItem> {
       });
       report.downvoters?.add(FirebaseAuth.instance.currentUser!.uid);
     }
+    _updateUpvotes();
   }
 
   @override

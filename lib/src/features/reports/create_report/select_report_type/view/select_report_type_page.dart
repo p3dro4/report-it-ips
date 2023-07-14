@@ -42,27 +42,6 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
             child: Stack(
       children: [
         const BackgroundImage(top: true, bottom: true),
-        Padding(
-            padding: const EdgeInsets.all(30),
-            child: CustomBackButton(
-              color: Theme.of(context).colorScheme.onPrimary,
-              text: L.of(context)!.back,
-              callback: () => Navigator.of(context).pop(),
-            )),
-        Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: CloseButton(
-                    color: Colors.black,
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.zero),
-                    ),
-                    onPressed: () => {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst),
-                        }))),
         _submitting
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -136,6 +115,20 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
                       )
                     ]),
               ),
+        Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: CloseButton(
+                    color: Colors.black,
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.zero),
+                    ),
+                    onPressed: () => {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst),
+                        }))),
         CustomBackButton(
           text: L.of(context)!.back,
           callback: () => Navigator.of(context).pop(),

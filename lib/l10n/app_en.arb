@@ -325,5 +325,15 @@
     "current_location": "Current location",
     "locate_on_map": "Locate on map",
     "location_outside_campus": "Location outside campus",
-    "select_images": "Select images for the report"
+    "select_images": "Select images for the report",
+    "banner_photo": "Banner photo",
+    "additional_photos": "Additional photos",
+    "add_photo": "Add photo",
+    "take_photo": "Take photo",
+    "publish_report": "Publish report",
+    "report_created_successfully": "Report created successfully",
+    "report_confirmation": "Do you want to publish this report?",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "banner_image_required": "Please provide a banner image"
 }
