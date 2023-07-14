@@ -324,5 +324,6 @@
     "location": "Location",
     "current_location": "Current location",
     "locate_on_map": "Locate on map",
-    "location_outside_campus": "Location outside campus"
+    "location_outside_campus": "Location outside campus",
+    "select_images": "Select images for the report"
 }

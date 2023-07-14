@@ -56,6 +56,12 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
       _submitting = true;
     });
     _report.location = _location;
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SelectPhotosPage(
+                  report: _report,
+                )));
   }
 
   bool _checkIfWithinBounds() {
@@ -185,6 +191,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                                       padding:
                                           const EdgeInsets.only(bottom: 20),
                                       child: FloatingActionButton(
+                                        heroTag: "center_camera",
                                         onPressed: () => {
                                           _mapController.animateCamera(
                                               CameraUpdate.newCameraPosition(
@@ -207,6 +214,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                                       const EdgeInsets.only(top: 70, right: 7),
                                   alignment: Alignment.topRight,
                                   child: FloatingActionButton(
+                                    heroTag: "change_map_type",
                                     onPressed: _changeMapType,
                                     elevation: 5,
                                     backgroundColor:

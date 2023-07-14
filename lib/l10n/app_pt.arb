@@ -111,5 +111,6 @@
     "location": "Localização",
     "current_location": "Localização atual",
     "locate_on_map": "Localizar no mapa",
-    "location_outside_campus": "Localização fora do campus"
+    "location_outside_campus": "Localização fora do campus",
+    "select_images": "Selecione imagens para o reporte"
 }
