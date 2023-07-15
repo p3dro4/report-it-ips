@@ -34,14 +34,16 @@ class _HomePageState extends State<HomePage> {
         .collection("highlights")
         .get()
         .then((value) => {
-              value.docs.forEach((element) {
-                if (element.data()["active"] as bool) {
-                  setState(() {
-                    _highlights
-                        .add(HighlightsBanner.fromSnapshot(element.data()));
-                  });
+              for (var doc in value.docs)
+                {
+                  if (doc.data()["active"] as bool)
+                    {
+                      setState(() {
+                        _highlights
+                            .add(HighlightsBanner.fromSnapshot(doc.data()));
+                      })
+                    }
                 }
-              })
             });
   }
 

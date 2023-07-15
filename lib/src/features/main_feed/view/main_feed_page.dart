@@ -39,11 +39,12 @@ class _MainFeedPageState extends State<MainFeedPage> {
         .orderBy("timestamp", descending: true)
         .get()
         .then((value) => {
-              value.docs.forEach((element) {
-                setState(() {
-                  _reports[element.id] = Report.fromSnapshot(element.data());
-                });
-              })
+              for (var doc in value.docs)
+                {
+                  setState(() {
+                    _reports[doc.id] = Report.fromSnapshot(doc.data());
+                  })
+                }
             });
     return _reports;
   }

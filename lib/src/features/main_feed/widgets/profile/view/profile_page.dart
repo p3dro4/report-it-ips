@@ -64,7 +64,7 @@ class ProfilePageState extends State<ProfilePage> {
   AppProfile? profile;
   AppUser? user;
   Map<String, Report> _reports = {};
-  Map<DateTime, Map<String, Report>> _userReportsByDate = {};
+  Map<DateTime, Map<String, Report>> _reportsByDate = {};
   late List<Widget> _userReportsByDateWidgets;
   final upvoteValue = 10;
   bool _processing = false;
@@ -85,7 +85,7 @@ class ProfilePageState extends State<ProfilePage> {
     profile = widget.profile;
     _reports = widget.reports;
     _onRefresh = widget.onRefresh;
-    _userReportsByDate = _getUserReports(_organizeByDate());
+    _organizeByDate();
     _userReportsByDateWidgets = _getUserReportsItems();
     _updateProfile().then((value) => {
           setState(() {
@@ -102,7 +102,10 @@ class ProfilePageState extends State<ProfilePage> {
         .get()
         .then((value) {
       AppProfile profile = AppProfile.fromSnapshot(value.data()!);
-      profile.nReports = _userReportsByDate.length;
+      profile.nReports = _reports.values
+          .where((element) =>
+              element.uid == FirebaseAuth.instance.currentUser!.uid)
+          .length;
       profile.nPoints = _reports.values
           .where((element) =>
               element.uid == FirebaseAuth.instance.currentUser!.uid)
@@ -121,7 +124,7 @@ class ProfilePageState extends State<ProfilePage> {
             });
   }
 
-  Map<DateTime, Map<String, Report>> _organizeByDate() {
+  void _organizeByDate() {
     Map<DateTime, Map<String, Report>> reportsByDate = {};
     _reports.forEach((key, value) {
       DateTime dateTime = DateFormat("dd-MM-yyyy").parse(
@@ -134,7 +137,9 @@ class ProfilePageState extends State<ProfilePage> {
         });
       }
     });
-    return reportsByDate;
+    setState(() {
+      _reportsByDate = reportsByDate;
+    });
   }
 
   String _getLeague(int? nPoints) {
@@ -163,60 +168,52 @@ class ProfilePageState extends State<ProfilePage> {
 
   List<Widget> _getUserReportsItems() {
     List<Widget> reportsList = [];
-
-    for (int index = 0; index < _userReportsByDate.length; index++) {
+    for (int index = 0; index < _reportsByDate.length; index++) {
+      List<ListReportItem> shownReports = _reportsByDate.values
+          .toList()[index]
+          .entries
+          .map((e) => ListReportItem(
+                key: UniqueKey(),
+                id: e.key,
+                report: e.value,
+                onTap: () async {
+                  await Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return DetailsReportPage(
+                        id: e.key,
+                        report: e.value,
+                      );
+                    },
+                  )).then((value) => {
+                        _onRefresh(),
+                      });
+                },
+              ))
+          .toList();
       reportsList.add(Column(
         children: [
           const SizedBox(
             height: 15,
           ),
-          Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                DateFormat("MMM dd")
-                    .format(_userReportsByDate.keys.toList()[index]),
-                style: TextStyle(
-                    color: Colors.grey.shade700,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500),
-              )),
+          if (shownReports.isNotEmpty)
+            Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  DateFormat("MMM dd")
+                      .format(_reportsByDate.keys.toList()[index]),
+                  style: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
+                )),
           Column(
-            children: _userReportsByDate.values
-                .toList()[index]
-                .entries
-                .map((e) => ListReportItem(
-                      onTap: () async {
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => DetailsReportPage(
-                                      report: e.value,
-                                      id: e.key,
-                                    ))).then((value) => setState(() {}));
-                      },
-                      report: e.value,
-                      id: e.key,
-                    ))
-                .toList(),
+            children: shownReports,
           )
         ],
       ));
     }
+    print(reportsList.length);
     return reportsList;
-  }
-
-  Map<DateTime, Map<String, Report>> _getUserReports(
-      Map<DateTime, Map<String, Report>> reportsByDate) {
-    Map<DateTime, Map<String, Report>> userReports = {};
-    reportsByDate.forEach((key, value) {
-      value.entries.forEach((element) {
-        if (element.value.uid != FirebaseAuth.instance.currentUser!.uid) return;
-        userReports.addAll({
-          key: {element.key: element.value}
-        });
-      });
-    });
-    return userReports;
   }
 
   Future<void> _onRefreshed() async {
@@ -226,6 +223,7 @@ class ProfilePageState extends State<ProfilePage> {
     await _onRefresh().then((value) {
       setState(() {
         _reports = value;
+        _organizeByDate();
         _userReportsByDateWidgets = _getUserReportsItems();
       });
     });

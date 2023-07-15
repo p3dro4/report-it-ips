@@ -97,9 +97,9 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
   Future<void> _loadImages() async {
     _bannerPhoto = Image.network(widget.report.bannerPhotoURL ?? "");
     setState(() {
-      report.addicionalPhotosURL!.forEach((element) {
-        _additionalPhotos.add(Image.network(element));
-      });
+      for (var url in report.addicionalPhotosURL ?? []) {
+        _additionalPhotos.add(Image.network(url));
+      }
     });
   }
 
