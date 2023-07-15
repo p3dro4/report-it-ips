@@ -190,6 +190,7 @@ class ProfilePageState extends State<ProfilePage> {
                             MaterialPageRoute(
                                 builder: (context) => DetailsReportPage(
                                       report: e.value,
+                                      id: e.key,
                                     ))).then((value) => setState(() {}));
                       },
                       report: e.value,

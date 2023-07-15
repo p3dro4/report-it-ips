@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
-import 'package:report_it_ips/src/features/reports/create_report/fill_info/view/fill_info_page.dart';
+import 'package:report_it_ips/src/features/reports/create_edit_report/fill_info/view/fill_info_page.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -42,6 +42,27 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
             child: Stack(
       children: [
         const BackgroundImage(top: true, bottom: true),
+        Padding(
+            padding: const EdgeInsets.all(30),
+            child: CustomBackButton(
+              color: Theme.of(context).colorScheme.onPrimary,
+              text: L.of(context)!.back,
+              callback: () => Navigator.of(context).pop(),
+            )),
+        Align(
+            alignment: Alignment.topRight,
+            child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: CloseButton(
+                    color: Colors.black,
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.zero),
+                    ),
+                    onPressed: () => {
+                          Navigator.of(context)
+                              .popUntil((route) => route.isFirst),
+                        }))),
         _submitting
             ? const Center(
                 child: CircularProgressIndicator(),
@@ -115,20 +136,6 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
                       )
                     ]),
               ),
-        Align(
-            alignment: Alignment.topRight,
-            child: Padding(
-                padding: const EdgeInsets.all(30),
-                child: CloseButton(
-                    color: Colors.black,
-                    style: ButtonStyle(
-                      padding: MaterialStateProperty.all<EdgeInsets>(
-                          EdgeInsets.zero),
-                    ),
-                    onPressed: () => {
-                          Navigator.of(context)
-                              .popUntil((route) => route.isFirst),
-                        }))),
         CustomBackButton(
           text: L.of(context)!.back,
           callback: () => Navigator.of(context).pop(),

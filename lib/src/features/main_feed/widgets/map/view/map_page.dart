@@ -83,6 +83,7 @@ class _MapPageState extends State<MapPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => DetailsReportPage(
+                            id: key,
                             report: value,
                           )));
             },

@@ -285,15 +285,18 @@ class _HomePageState extends State<HomePage> {
                                         .map((e) => ListReportItem(
                                               id: e.key,
                                               report: e.value,
-                                              onTap: () {
-                                                Navigator.push(context,
+                                              onTap: () async {
+                                                await Navigator.push(context,
                                                     MaterialPageRoute(
                                                   builder: (context) {
                                                     return DetailsReportPage(
+                                                      id: e.key,
                                                       report: e.value,
                                                     );
                                                   },
-                                                ));
+                                                )).then((value) => {
+                                                      _refresh(),
+                                                    });
                                               },
                                             ))
                                         .where((element) =>

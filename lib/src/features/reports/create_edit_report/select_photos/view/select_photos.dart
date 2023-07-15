@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
-import 'package:report_it_ips/src/features/reports/create_report/select_photos/widgets/widgets.dart';
+import 'package:report_it_ips/src/features/reports/create_edit_report/select_photos/widgets/widgets.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_storage/firebase_storage.dart';

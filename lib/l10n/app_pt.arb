@@ -122,5 +122,11 @@
     "report_confirmation": "Deseja publicar o reporte?",
     "confirm": "Confirmar",
     "cancel": "Cancelar",
-    "banner_image_required": "É necessário selecionar uma foto de capa"
+    "banner_image_required": "É necessário selecionar uma foto de capa",
+    "mark_as_resolved": "Marcar como resolvido",
+    "delete_report": "Eliminar reporte",
+    "unmark_as_resolved": "Desmarcar como resolvido",
+    "report_deleted_successfully": "Reporte eliminado com sucesso",
+    "delete_report_confirmation": "Deseja eliminar o reporte?",
+    "delete": "Eliminar"
 }
