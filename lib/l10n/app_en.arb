@@ -344,6 +344,17 @@
     "delete": "Delete",
     "edit_report": "Edit report",
     "report_edited_successfully": "Report edited successfully",
-    "save_changes": "Save changes"
-
+    "save_changes": "Save changes",
+    "delete_account": "Delete account",
+    "account": "Account",
+    "change_password": "Change password",
+    "select_image": "Select image",
+    "camera" : "Camera",
+    "gallery" : "Gallery",
+    "profile_updated_successfully": "Profile updated successfully",
+    "authentication_error": "Authentication error",
+    "authentication_required_to_perform_action": "Authentication required to perform this action",
+    "login_to_continue": "Login to continue",
+    "account_deleted_successfully": "Account deleted successfully",
+    "account_deletion_error": "Account deletion error, please login again"
 }

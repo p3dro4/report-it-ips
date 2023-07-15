@@ -131,5 +131,17 @@
     "delete": "Eliminar",
     "edit_report": "Editar reporte",
     "report_edited_successfully": "Reporte editado com sucesso",
-    "save_changes": "Guardar alterações"
+    "save_changes": "Guardar alterações",
+    "delete_account": "Eliminar conta",
+    "account": "Conta",
+    "change_password": "Alterar palavra-passe",
+    "select_image": "Selecione uma imagem",
+    "camera": "Câmara",
+    "gallery": "Galeria",
+    "profile_updated_successfully": "Perfil atualizado com sucesso",
+    "authentication_error": "Ocorreu um erro de autenticação",
+    "authentication_required_to_perform_action": "É necessário autenticar-se para realizar esta ação",
+    "login_to_continue": "Inicie sessão para continuar",
+    "account_deleted_successfully": "Conta eliminada com sucesso",
+    "account_deletion_error": "Ocorreu um erro ao eliminar a conta, por favor inicie sessão novamente"
 }

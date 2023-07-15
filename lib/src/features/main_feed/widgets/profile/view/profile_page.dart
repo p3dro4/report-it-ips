@@ -106,12 +106,13 @@ class ProfilePageState extends State<ProfilePage> {
           .where((element) =>
               element.uid == FirebaseAuth.instance.currentUser!.uid)
           .length;
-      profile.nPoints = _reports.values
-          .where((element) =>
-              element.uid == FirebaseAuth.instance.currentUser!.uid)
-          .map((e) => e.upvotes! * upvoteValue)
-          .reduce((value, element) => value + element);
-
+      if (profile.nReports! > 0) {
+        profile.nPoints = _reports.values
+            .where((element) =>
+                element.uid == FirebaseAuth.instance.currentUser!.uid)
+            .map((e) => e.upvotes! * upvoteValue)
+            .reduce((value, element) => value + element);
+      }
       return profile;
     }).then((value) => {
               FirebaseFirestore.instance
@@ -189,6 +190,8 @@ class ProfilePageState extends State<ProfilePage> {
                       });
                 },
               ))
+          .where((element) =>
+              element.report.uid == FirebaseAuth.instance.currentUser!.uid)
           .toList();
       reportsList.add(Column(
         children: [
@@ -212,7 +215,6 @@ class ProfilePageState extends State<ProfilePage> {
         ],
       ));
     }
-    print(reportsList.length);
     return reportsList;
   }
 
