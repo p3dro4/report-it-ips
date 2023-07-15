@@ -7,6 +7,7 @@ import 'package:report_it_ips/src/features/main_feed/widgets/profile/widgets/wid
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:report_it_ips/src/features/reports/reports.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage(

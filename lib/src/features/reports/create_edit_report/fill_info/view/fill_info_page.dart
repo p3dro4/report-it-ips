@@ -43,7 +43,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
         _submitting = true;
       });
       report.title = _fieldTitle!.trim();
-      report.description = _fieldDescription!.trim();
+      report.description = _fieldDescription?.trim() ?? "";
       report.tags = _tags.toList();
       Navigator.push(
           context,

@@ -2,12 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/home/widgets/widgets.dart';
+import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:report_it_ips/src/features/reports/reports.dart';
 import 'package:report_it_ips/src/utils/background_image.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-// TODO Fix bug where there are duplicate reports\
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.reports, required this.onRefresh});
 
@@ -20,13 +20,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _processing = false;
-  ReportType? _currentFilter;
   int _currentHighlight = 0;
+  ReportType? _currentFilter;
   String _searchText = "";
+  late Future<Map<String, Report>> Function() _onRefresh;
   late List<HighlightsBanner> _highlights;
   late Map<String, Report> _reports;
   late Map<DateTime, Map<String, Report>> _reportsByDate;
-  late Future<Map<String, Report>> Function() _onRefresh;
 
   Future<void> _initBanner() async {
     _highlights = [];
@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
     await _onRefresh().then((value) {
       _reports = value;
       _organizeByDate();
+      _currentFilter = null;
     }).then((value) => {
           setState(() {
             _processing = false;
@@ -101,98 +102,27 @@ class _HomePageState extends State<HomePage> {
         ),
         _processing
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.025),
-                    SearchBar(
+            : Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30),
+                    child: CustomSearch(
                       onChanged: (value) {
                         setState(() {
                           _searchText = value;
                         });
                       },
-                      leading: const Icon(Icons.search),
-                      hintText: L.of(context)!.search,
-                      side: MaterialStatePropertyAll<BorderSide>(BorderSide(
-                          width: 2,
-                          color: Theme.of(context).colorScheme.brightness ==
-                                  Brightness.light
-                              ? Colors.black
-                              : Colors.white)),
-                      trailing: const [
-                        Padding(
-                            padding: EdgeInsets.all(5),
-                            child: Icon(Icons.more_vert))
-                      ],
+                      onFilterChanged: (value) {
+                        setState(() {
+                          _currentFilter = value;
+                        });
+                      },
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(children: [
-                        CustomFilterButton(
-                          onPressed: () {
-                            setState(() {
-                              _currentFilter = null;
-                            });
-                          },
-                          text: L.of(context)!.all,
-                          color: _currentFilter == null
-                              ? Colors.white
-                              : Colors.grey.shade400,
-                          textColor: _currentFilter == null
-                              ? Colors.black
-                              : Colors.grey.shade700,
-                        ),
-                        const SizedBox(width: 10),
-                        CustomFilterButton(
-                            onPressed: () {
-                              setState(() {
-                                _currentFilter = ReportType.priority;
-                              });
-                            },
-                            text: L.of(context)!.priority,
-                            color: _currentFilter == ReportType.priority
-                                ? Colors.white
-                                : Colors.grey.shade400,
-                            textColor: _currentFilter == ReportType.priority
-                                ? Colors.black
-                                : Colors.grey.shade700),
-                        const SizedBox(width: 10),
-                        CustomFilterButton(
-                          onPressed: () {
-                            setState(() {
-                              _currentFilter = ReportType.warning;
-                            });
-                          },
-                          text: L.of(context)!.warning,
-                          color: _currentFilter == ReportType.warning
-                              ? Colors.white
-                              : Colors.grey.shade400,
-                          textColor: _currentFilter == ReportType.warning
-                              ? Colors.black
-                              : Colors.grey.shade700,
-                        ),
-                        const SizedBox(width: 10),
-                        CustomFilterButton(
-                          onPressed: () {
-                            setState(() {
-                              _currentFilter = ReportType.info;
-                            });
-                          },
-                          text: L.of(context)!.info,
-                          color: _currentFilter == ReportType.info
-                              ? Colors.white
-                              : Colors.grey.shade400,
-                          textColor: _currentFilter == ReportType.info
-                              ? Colors.black
-                              : Colors.grey.shade700,
-                        ),
-                      ]),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
                         constraints: BoxConstraints.expand(
                             height: MediaQuery.of(context).size.height * 0.70),
                         child: RefreshIndicator(
@@ -283,6 +213,7 @@ class _HomePageState extends State<HomePage> {
                                         .toList()[index - 1]
                                         .entries
                                         .map((e) => ListReportItem(
+                                              key: UniqueKey(),
                                               id: e.key,
                                               report: e.value,
                                               onTap: () async {
@@ -299,18 +230,23 @@ class _HomePageState extends State<HomePage> {
                                                     });
                                               },
                                             ))
-                                        .where((element) =>
-                                            _currentFilter == null ||
-                                            (element.report.type ==
-                                                    _currentFilter &&
-                                                !element.report.resolved))
-                                        .map((e) => e)
-                                        .where((element) => element
-                                            .report.title!
-                                            .toLowerCase()
-                                            .contains(
-                                                _searchText.toLowerCase()))
-                                        .toList();
+                                        .where((element) {
+                                  if (_currentFilter != null) {
+                                    return element.report.type ==
+                                            _currentFilter &&
+                                        !element.report.resolved;
+                                  } else {
+                                    return true;
+                                  }
+                                }).where((element) {
+                                  if (_searchText.isNotEmpty) {
+                                    return element.report.title!
+                                        .toLowerCase()
+                                        .contains(_searchText.toLowerCase());
+                                  } else {
+                                    return true;
+                                  }
+                                }).toList();
                                 return Column(
                                   children: [
                                     const SizedBox(
@@ -335,8 +271,9 @@ class _HomePageState extends State<HomePage> {
                                 );
                               },
                             ))),
-                  ],
-                ))
+                  ),
+                ],
+              )
       ],
     );
   }

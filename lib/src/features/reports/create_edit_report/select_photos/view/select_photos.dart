@@ -111,6 +111,10 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
       _loadImages().then((value) => setState(() {
             _submitting = false;
           }));
+    } else {
+      setState(() {
+        _submitting = false;
+      });
     }
     super.initState();
   }

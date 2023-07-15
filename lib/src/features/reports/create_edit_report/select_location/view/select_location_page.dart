@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
+import 'package:report_it_ips/src/features/reports/reports.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mt;
 
@@ -67,6 +68,9 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                   id: widget.id,
                   report: _report,
                 )));
+    setState(() {
+      _submitting = false;
+    });
   }
 
   bool _checkIfWithinBounds() {
@@ -253,21 +257,19 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                                   Theme.of(context).colorScheme.onPrimary,
                               callback: () async {
                                 setState(() {
-                                  setState(() {
-                                    _showLocationOutside =
-                                        !_checkIfWithinBounds();
-                                  });
-                                  if (!_showLocationOutside) {
-                                    setState(() {
-                                      _submitting = true;
-                                    });
-                                    _continueToNextPage().then((value) => {
-                                          setState(() {
-                                            _submitting = false;
-                                          })
-                                        });
-                                  }
+                                  _showLocationOutside =
+                                      !_checkIfWithinBounds();
                                 });
+                                if (!_showLocationOutside) {
+                                  setState(() {
+                                    _submitting = true;
+                                  });
+                                  _continueToNextPage().then((value) => {
+                                        setState(() {
+                                          _submitting = false;
+                                        })
+                                      });
+                                }
                               }),
                         )
                       ])),

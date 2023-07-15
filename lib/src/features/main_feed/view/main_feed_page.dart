@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/profile/models/profile.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
+import 'package:report_it_ips/src/features/reports/reports.dart';
 
 class MainFeedPage extends StatefulWidget {
   const MainFeedPage({super.key, this.user});
@@ -129,7 +130,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
                     onRefresh: () async {
                       return await _loadReports();
                     }),
-                2 => const CalendarPage(),
+                2 => CalendarPage(
+                    reports: _reports,
+                  ),
                 3 => ProfilePage(
                     user: user!,
                     profile: profile!,

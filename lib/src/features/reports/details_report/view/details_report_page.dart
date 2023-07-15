@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 import 'package:report_it_ips/src/features/reports/details_report/widgets/widgets.dart';
+import 'package:report_it_ips/src/features/reports/reports.dart';
 import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -183,6 +184,7 @@ class _DetailsReportPageState extends State<DetailsReportPage> {
                       const SizedBox(height: 10),
                       SizedBox(
                           height: 30,
+                          width: MediaQuery.of(context).size.width * 0.8,
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -216,12 +218,12 @@ class _DetailsReportPageState extends State<DetailsReportPage> {
                                           .colorScheme
                                           .onBackground
                                           .withOpacity(0.4)),
-                                  Text(
+                                  AutoSizeText(
                                     DateFormat('dd/MM/yyyy, hh:mm').format(
                                         report.timestamp ?? DateTime.now()),
+                                    maxLines: 1,
                                     style: TextStyle(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 14,
                                         color: Theme.of(context)
                                             .colorScheme
                                             .onBackground
