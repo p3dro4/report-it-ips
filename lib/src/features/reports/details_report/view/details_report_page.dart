@@ -451,6 +451,17 @@ class _DetailsReportPageState extends State<DetailsReportPage> {
             child: Padding(
               padding: const EdgeInsets.all(40),
               child: PopupMenuButton(
+                  onSelected: (value) {
+                    if (value == "edit") {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SelectReportTypePage(
+                                    id: id,
+                                    report: report,
+                                  )));
+                    }
+                  },
                   itemBuilder: (context) {
                     return [
                       PopupMenuItem(
@@ -477,6 +488,19 @@ class _DetailsReportPageState extends State<DetailsReportPage> {
                           )
                         ]),
                       ),
+                      PopupMenuItem(
+                          value: "edit",
+                          child: Row(children: [
+                            const Icon(
+                              Icons.edit,
+                              color: Colors.black,
+                            ),
+                            const SizedBox(width: 15),
+                            Text(
+                              L.of(context)!.edit_report,
+                              style: const TextStyle(color: Colors.black),
+                            )
+                          ])),
                       PopupMenuItem(
                           value: "delete",
                           onTap: () {

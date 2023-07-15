@@ -128,5 +128,8 @@
     "unmark_as_resolved": "Desmarcar como resolvido",
     "report_deleted_successfully": "Reporte eliminado com sucesso",
     "delete_report_confirmation": "Deseja eliminar o reporte?",
-    "delete": "Eliminar"
+    "delete": "Eliminar",
+    "edit_report": "Editar reporte",
+    "report_edited_successfully": "Reporte editado com sucesso",
+    "save_changes": "Guardar alterações"
 }

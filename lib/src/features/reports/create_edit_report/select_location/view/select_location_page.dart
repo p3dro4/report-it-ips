@@ -9,8 +9,9 @@ import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as mt;
 
 class SelectLocationPage extends StatefulWidget {
-  const SelectLocationPage({super.key, required this.report});
+  const SelectLocationPage({super.key, this.id, required this.report});
 
+  final String? id;
   final Report report;
 
   @override
@@ -48,6 +49,9 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
     ));
     _location = MapPage.ipsCameraPosition.target;
     _report = widget.report;
+    if (widget.id != null) {
+      _location = widget.report.location ?? MapPage.ipsCameraPosition.target;
+    }
     super.initState();
   }
 
@@ -60,6 +64,7 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
         context,
         MaterialPageRoute(
             builder: (context) => SelectPhotosPage(
+                  id: widget.id,
                   report: _report,
                 )));
   }
@@ -163,8 +168,8 @@ class _SelectLocationPageState extends State<SelectLocationPage> {
                               child: Stack(children: [
                                 GoogleMap(
                                   mapType: _currentMapType,
-                                  initialCameraPosition:
-                                      MapPage.ipsCameraPosition,
+                                  initialCameraPosition: CameraPosition(
+                                      target: _location, zoom: 16),
                                   onMapCreated: _onMapCreated,
                                   myLocationEnabled: true,
                                   myLocationButtonEnabled: true,

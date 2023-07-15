@@ -10,9 +10,10 @@ import 'package:report_it_ips/src/features/main_feed/widgets/widgets.dart';
 import 'package:report_it_ips/src/features/models/models.dart';
 
 class MapPage extends StatefulWidget {
-  const MapPage({super.key, required this.reports});
+  const MapPage({super.key, required this.reports, required this.onRefresh});
 
   final Map<String, Report> reports;
+  final Future<Map<String, Report>> Function()? onRefresh;
 
   static const CameraPosition ipsCameraPosition = CameraPosition(
     target: LatLng(38.5219554772082, -8.839772343635559),
@@ -78,14 +79,16 @@ class _MapPageState extends State<MapPage> {
           infoWindow: InfoWindow(
             title: value.title,
             snippet: value.description,
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => DetailsReportPage(
-                            id: key,
-                            report: value,
-                          )));
+            onTap: () async {
+              await widget.onRefresh!()
+                  .then((value) => _reports = value)
+                  .then((report) => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DetailsReportPage(
+                                id: key,
+                                report: report[key]!,
+                              ))));
             },
           ),
         ),

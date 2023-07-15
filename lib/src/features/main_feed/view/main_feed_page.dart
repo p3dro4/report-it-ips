@@ -126,7 +126,9 @@ class _MainFeedPageState extends State<MainFeedPage> {
             : switch (currentIndex) {
                 1 => MapPage(
                     reports: _reports,
-                  ),
+                    onRefresh: () async {
+                      return await _loadReports();
+                    }),
                 2 => const CalendarPage(),
                 3 => ProfilePage(
                     user: user!,

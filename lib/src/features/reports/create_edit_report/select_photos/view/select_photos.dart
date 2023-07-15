@@ -12,8 +12,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class SelectPhotosPage extends StatefulWidget {
-  const SelectPhotosPage({super.key, required this.report});
+  const SelectPhotosPage({super.key, this.id, required this.report});
 
+  final String? id;
   final Report report;
 
   @override
@@ -23,9 +24,11 @@ class SelectPhotosPage extends StatefulWidget {
 class _SelectPhotosPageState extends State<SelectPhotosPage> {
   late Report report;
   bool _submitting = false;
-  File? _bannerPhoto;
   File? _imageFile;
-  final List<File> _additionalPhotos = [];
+  File? _bannerPhotoFile;
+  Image? _bannerPhoto;
+  final List<File> _additionalPhotosFiles = [];
+  final List<Image> _additionalPhotos = [];
   bool _showBannerImageRequired = false;
   bool _showConfirmDialog = false;
 
@@ -53,41 +56,62 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
     setState(() {
       _submitting = true;
     });
-    final doc = FirebaseFirestore.instance.collection("reports").doc();
-    report.timestamp = DateTime.now();
+    final doc = FirebaseFirestore.instance.collection("reports").doc(widget.id);
+    report.timestamp = report.timestamp ?? DateTime.now();
     report.uid = FirebaseAuth.instance.currentUser!.uid;
-    report.upvotes = 0;
-    await FirebaseStorage.instance
-        .ref("reports_images/${doc.id}/banner")
-        .putFile(_bannerPhoto!)
-        .then((p0) => p0.ref
-            .getDownloadURL()
-            .then((value) => report.bannerPhotoURL = value));
-    List<String> addicionalPhotosURL = [];
-    await Future.wait(_additionalPhotos.map((e) async {
+    report.upvotes = report.upvotes ?? 0;
+    if (_bannerPhotoFile != null) {
+      await FirebaseStorage.instance
+          .ref("reports_images/${doc.id}/banner")
+          .putFile(_bannerPhotoFile!)
+          .then((p0) => p0.ref
+              .getDownloadURL()
+              .then((value) => report.bannerPhotoURL = value));
+    }
+    List<String> addicionalPhotosURL = report.addicionalPhotosURL ?? [];
+    await Future.wait(_additionalPhotosFiles.map((e) async {
       await FirebaseStorage.instance
           .ref(
-              "reports_images/${doc.id}/add_photo_${_additionalPhotos.indexOf(e)}")
+              "reports_images/${doc.id}/add_photo_${_additionalPhotosFiles.indexOf(e)}")
           .putFile(e)
           .then((p0) => p0.ref
               .getDownloadURL()
               .then((value) => addicionalPhotosURL.add(value)));
     })).then((value) => report.setAdicionalPhotosURL(addicionalPhotosURL));
-    await doc
-        .set(report.toJson(), SetOptions(merge: true))
-        .then((value) => setState(() {
-              _submitting = false;
-              Navigator.of(context).popUntil((route) => route.isFirst);
-              showSnackbar(
-                  context: context,
-                  message: L.of(context)!.report_created_successfully,
-                  backgroundColor: Colors.green);
-            }));
+    Map<String, dynamic> json = report.toJson();
+    if (widget.id != null) {
+      json.addEntries([MapEntry("editTimestampt", DateTime.now())]);
+    }
+    await doc.set(json, SetOptions(merge: true)).then((value) => setState(() {
+          _submitting = false;
+          Navigator.of(context).popUntil((route) => route.isFirst);
+          showSnackbar(
+              context: context,
+              message: widget.id != null
+                  ? L.of(context)!.report_edited_successfully
+                  : L.of(context)!.report_created_successfully,
+              backgroundColor: Colors.green);
+        }));
+  }
+
+  Future<void> _loadImages() async {
+    _bannerPhoto = Image.network(widget.report.bannerPhotoURL ?? "");
+    setState(() {
+      report.addicionalPhotosURL!.forEach((element) {
+        _additionalPhotos.add(Image.network(element));
+      });
+    });
   }
 
   @override
   void initState() {
+    _submitting = true;
     report = widget.report;
+    if (widget.id != null) {
+      _loadImages().then((value) => setState(() {
+            _submitting = false;
+          }));
+    }
     super.initState();
   }
 
@@ -146,101 +170,114 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                       .copyWith(fontWeight: FontWeight.bold),
                                 )),
                             const SizedBox(height: 20),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      pickImage(ImageSource.gallery)
-                                          .then((value) => setState(() {
-                                                _bannerPhoto = _imageFile;
-                                                _showBannerImageRequired =
-                                                    false;
-                                              }));
-                                    },
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 10)),
-                                      elevation: MaterialStateProperty.all(5),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      )),
+                            if (_bannerPhoto == null)
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        pickImage(ImageSource.gallery)
+                                            .then((value) => setState(() {
+                                                  _bannerPhotoFile = _imageFile;
+                                                  _bannerPhoto = Image.file(
+                                                      _bannerPhotoFile!,
+                                                      height: 60,
+                                                      width: 100,
+                                                      fit: BoxFit.fill);
+                                                  _showBannerImageRequired =
+                                                      false;
+                                                }));
+                                      },
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.symmetric(
+                                                vertical: 10)),
+                                        elevation: MaterialStateProperty.all(5),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        )),
+                                      ),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                                Icons
+                                                    .add_photo_alternate_outlined,
+                                                color: Colors.white),
+                                            const SizedBox(width: 10),
+                                            Text(L.of(context)!.add_photo,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary))
+                                          ]),
                                     ),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                              Icons
-                                                  .add_photo_alternate_outlined,
-                                              color: Colors.white),
-                                          const SizedBox(width: 10),
-                                          Text(L.of(context)!.add_photo,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary))
-                                        ]),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      pickImage(ImageSource.camera)
-                                          .then((value) => setState(() {
-                                                _bannerPhoto = _imageFile;
-                                                _showBannerImageRequired =
-                                                    false;
-                                              }));
-                                    },
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 10)),
-                                      elevation: MaterialStateProperty.all(5),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      )),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        pickImage(ImageSource.camera)
+                                            .then((value) => setState(() {
+                                                  _bannerPhotoFile = _imageFile;
+                                                  _bannerPhoto = Image.file(
+                                                      height: 60,
+                                                      width: 100,
+                                                      _bannerPhotoFile!,
+                                                      fit: BoxFit.fill);
+                                                  _showBannerImageRequired =
+                                                      false;
+                                                }));
+                                      },
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.symmetric(
+                                                vertical: 10)),
+                                        elevation: MaterialStateProperty.all(5),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        )),
+                                      ),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                                Icons.photo_camera_outlined,
+                                                color: Colors.white),
+                                            const SizedBox(width: 10),
+                                            Text(L.of(context)!.take_photo,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary))
+                                          ]),
                                     ),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                              Icons.photo_camera_outlined,
-                                              color: Colors.white),
-                                          const SizedBox(width: 10),
-                                          Text(L.of(context)!.take_photo,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary))
-                                        ]),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             const SizedBox(height: 25),
                             if (_showBannerImageRequired)
                               Align(
@@ -262,12 +299,10 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                   alignment: Alignment.centerLeft,
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
-                                    child: Image.file(
-                                      _bannerPhoto!,
-                                      width: 100,
-                                      height: 60,
-                                      fit: BoxFit.cover,
-                                    ),
+                                    child: SizedBox(
+                                        width: 100,
+                                        height: 60,
+                                        child: _bannerPhoto!),
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -275,6 +310,7 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                     onPressed: () {
                                       setState(() {
                                         _bannerPhoto = null;
+                                        _bannerPhotoFile = null;
                                       });
                                     },
                                     icon: const Icon(
@@ -300,99 +336,115 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                       .copyWith(fontWeight: FontWeight.bold),
                                 )),
                             const SizedBox(height: 20),
-                            Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: [
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      pickImage(ImageSource.gallery)
-                                          .then((value) => setState(() {
-                                                _additionalPhotos
-                                                    .add(_imageFile!);
-                                              }));
-                                    },
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 10)),
-                                      elevation: MaterialStateProperty.all(5),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      )),
+                            if (_additionalPhotos.length < 3)
+                              Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        pickImage(ImageSource.gallery)
+                                            .then((value) => setState(() {
+                                                  _additionalPhotosFiles
+                                                      .add(_imageFile!);
+                                                  _additionalPhotos
+                                                      .add(Image.file(
+                                                    _imageFile!,
+                                                    height: 60,
+                                                    width: 100,
+                                                    fit: BoxFit.fill,
+                                                  ));
+                                                }));
+                                      },
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.symmetric(
+                                                vertical: 10)),
+                                        elevation: MaterialStateProperty.all(5),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        )),
+                                      ),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                                Icons
+                                                    .add_photo_alternate_outlined,
+                                                color: Colors.white),
+                                            const SizedBox(width: 10),
+                                            Text(L.of(context)!.add_photo,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary))
+                                          ]),
                                     ),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                              Icons
-                                                  .add_photo_alternate_outlined,
-                                              color: Colors.white),
-                                          const SizedBox(width: 10),
-                                          Text(L.of(context)!.add_photo,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary))
-                                        ]),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      pickImage(ImageSource.camera)
-                                          .then((value) => setState(() {
-                                                _additionalPhotos
-                                                    .add(_imageFile!);
-                                              }));
-                                    },
-                                    style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          const EdgeInsets.symmetric(
-                                              vertical: 10)),
-                                      elevation: MaterialStateProperty.all(5),
-                                      backgroundColor:
-                                          MaterialStateProperty.all(
-                                              Theme.of(context)
-                                                  .colorScheme
-                                                  .primary),
-                                      shape: MaterialStateProperty.all(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      )),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        pickImage(ImageSource.camera)
+                                            .then((value) => setState(() {
+                                                  _additionalPhotosFiles
+                                                      .add(_imageFile!);
+                                                  _additionalPhotos.add(
+                                                    Image.file(_imageFile!,
+                                                        height: 60,
+                                                        width: 100,
+                                                        fit: BoxFit.fill),
+                                                  );
+                                                }));
+                                      },
+                                      style: ButtonStyle(
+                                        padding: MaterialStateProperty.all(
+                                            const EdgeInsets.symmetric(
+                                                vertical: 10)),
+                                        elevation: MaterialStateProperty.all(5),
+                                        backgroundColor:
+                                            MaterialStateProperty.all(
+                                                Theme.of(context)
+                                                    .colorScheme
+                                                    .primary),
+                                        shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        )),
+                                      ),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(
+                                                Icons.photo_camera_outlined,
+                                                color: Colors.white),
+                                            const SizedBox(width: 10),
+                                            Text(L.of(context)!.take_photo,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .onPrimary))
+                                          ]),
                                     ),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                              Icons.photo_camera_outlined,
-                                              color: Colors.white),
-                                          const SizedBox(width: 10),
-                                          Text(L.of(context)!.take_photo,
-                                              style: TextStyle(
-                                                  fontSize: 15,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onPrimary))
-                                        ]),
                                   ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
                             const SizedBox(height: 25),
                             _additionalPhotos.isNotEmpty
                                 ? Align(
@@ -409,9 +461,26 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                               return IconButton(
                                                   onPressed: () {
                                                     setState(() {
-                                                      _additionalPhotos.remove(
-                                                          _additionalPhotos
-                                                              .last);
+                                                      if (_additionalPhotos
+                                                          .isNotEmpty) {
+                                                        _additionalPhotos.remove(
+                                                            _additionalPhotos
+                                                                .last);
+                                                      }
+                                                      if (report
+                                                          .addicionalPhotosURL!
+                                                          .isNotEmpty) {
+                                                        report
+                                                            .addicionalPhotosURL!
+                                                            .removeLast();
+                                                      }
+                                                      if (_additionalPhotosFiles
+                                                          .isNotEmpty) {
+                                                        _additionalPhotosFiles
+                                                            .remove(
+                                                                _additionalPhotosFiles
+                                                                    .last);
+                                                      }
                                                     });
                                                   },
                                                   icon: const Icon(
@@ -425,14 +494,14 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                                           right: 10),
                                                   child: SizedBox(
                                                     width: 100,
+                                                    height: 60,
                                                     child: ClipRRect(
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(5),
-                                                        child: Image.file(
+                                                        child:
                                                             _additionalPhotos[
-                                                                index],
-                                                            fit: BoxFit.cover)),
+                                                                index]),
                                                   ));
                                             }
                                           }),
@@ -445,7 +514,9 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                         Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 40),
                             child: CustomSubmitButton(
-                              text: L.of(context)!.publish_report,
+                              text: widget.id != null
+                                  ? L.of(context)!.save_changes
+                                  : L.of(context)!.publish_report,
                               color: Theme.of(context).colorScheme.primary,
                               textColor:
                                   Theme.of(context).colorScheme.onPrimary,
@@ -456,6 +527,11 @@ class _SelectPhotosPageState extends State<SelectPhotosPage> {
                                   });
                                   return;
                                 }
+                                if (widget.id != null) {
+                                  _onSubmit();
+                                  return;
+                                }
+
                                 setState(() {
                                   _showConfirmDialog = true;
                                 });

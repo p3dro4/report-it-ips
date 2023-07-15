@@ -5,9 +5,10 @@ import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FillInfoPage extends StatefulWidget {
-  const FillInfoPage({super.key, required this.report});
+  const FillInfoPage({super.key, this.id, required this.report});
 
   final Report report;
+  final String? id;
 
   @override
   State<FillInfoPage> createState() => _FillInfoPageState();
@@ -21,12 +22,17 @@ class _FillInfoPageState extends State<FillInfoPage> {
   bool _showTagsOverlay = false;
 
   String? _fieldTitle;
-  String? _fieldDescription = "";
+  String? _fieldDescription;
   final Set<ReportTag> _tags = {};
 
   @override
   void initState() {
     report = widget.report;
+    if (widget.id != null) {
+      _fieldTitle = report.title;
+      _fieldDescription = report.description;
+      _tags.addAll(report.tags?.toList() ?? []);
+    }
     super.initState();
   }
 
@@ -43,6 +49,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
           context,
           MaterialPageRoute(
               builder: (context) => SelectLocationPage(
+                    id: widget.id,
                     report: report,
                   )));
     }
@@ -124,6 +131,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                             CustomFormInputField(
                                               prefixIcon: Icons.title,
                                               labelText: L.of(context)!.title,
+                                              initialValue: _fieldTitle,
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .primary,
@@ -254,6 +262,7 @@ class _FillInfoPageState extends State<FillInfoPage> {
                                             TextFormField(
                                               minLines: 3,
                                               maxLines: 3,
+                                              initialValue: _fieldDescription,
                                               textInputAction:
                                                   TextInputAction.newline,
                                               keyboardType:

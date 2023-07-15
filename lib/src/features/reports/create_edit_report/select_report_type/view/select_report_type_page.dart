@@ -5,7 +5,10 @@ import 'package:report_it_ips/src/utils/utils.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SelectReportTypePage extends StatefulWidget {
-  const SelectReportTypePage({super.key});
+  const SelectReportTypePage({super.key, this.id, this.report});
+
+  final String? id;
+  final Report? report;
 
   @override
   State<SelectReportTypePage> createState() => _SelectReportTypePageState();
@@ -18,7 +21,12 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
 
   @override
   void initState() {
-    _report = Report();
+    if (widget.report != null && widget.id != null) {
+      _report = widget.report!;
+      _reportType = _report.type;
+    } else {
+      _report = Report();
+    }
     super.initState();
   }
 
@@ -31,6 +39,7 @@ class _SelectReportTypePageState extends State<SelectReportTypePage> {
         context,
         MaterialPageRoute(
             builder: (context) => FillInfoPage(
+                  id: widget.id,
                   report: _report,
                 )));
   }

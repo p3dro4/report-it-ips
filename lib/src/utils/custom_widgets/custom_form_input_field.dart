@@ -12,6 +12,7 @@ class CustomFormInputField extends StatefulWidget {
       this.onChanged,
       this.counterText,
       this.counterStyle,
+      this.initialValue,
       this.onSaved,
       this.keyboardType,
       this.textInputAction,
@@ -19,6 +20,7 @@ class CustomFormInputField extends StatefulWidget {
       this.color = Colors.black,
       this.errorColor = Colors.red,
       this.textCapitalization = TextCapitalization.none});
+
   final IconData prefixIcon;
   final String labelText;
   final Color color;
@@ -35,6 +37,7 @@ class CustomFormInputField extends StatefulWidget {
   final String? counterText;
   final TextStyle? counterStyle;
   final ValueChanged<String>? onChanged;
+  final String? initialValue;
 
   @override
   State<CustomFormInputField> createState() => _CustomFormInputFieldState();
@@ -94,6 +97,7 @@ class _CustomFormInputFieldState extends State<CustomFormInputField> {
               counterText: widget.counterText,
               counterStyle: widget.counterStyle),
       keyboardType: widget.keyboardType,
+      initialValue: widget.initialValue,
       textInputAction: widget.textInputAction,
       obscureText: widget.obscureText,
       validator: widget.validator,
